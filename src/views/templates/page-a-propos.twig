@@ -1,5 +1,5 @@
 {% extends "layouts/base.twig" %}
-{% set template = 'a-propos' %}
+{% set footerTone = 'secondary' %}
 
 {# Variables disponibles :
 	{{ dump(hero) }}
@@ -37,7 +37,7 @@
 
 
 {% block main %}
-	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+	<div class="container flex flex-col" id="post-{{post.ID}}">
 		
 		{% include 'partials/image-text.twig' with heroDatas %}
 		
@@ -47,19 +47,19 @@
 			ratio: 'banner'
 		}} %}
 
-		<div class="paragraph--our-members">
+		<div class="my-12.5 desktop:max-w-1/2">
 			{% include 'modules/paragraph.twig' with equipeDatas %}
 		</div>
 
     	{% include 'partials/members.twig' with {members: membres} %}
 		
-		<div class="paragraph--archives">
+		<div class="band mt-[120px] py-[120px] before:h-full before:bg-soft-secondary [&_.typeset]:m-0 [&_.typeset]:mb-5">
 			{% include 'modules/paragraph.twig' with archivesDatas %}
 
 			{% include 'components/button.twig' with {
 				label: archivesDatas.btn.label,
 				href: archivesDatas.btn.url,
-			} %}
+			} only %}
 		</div>
 
 	</div>

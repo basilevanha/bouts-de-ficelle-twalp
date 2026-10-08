@@ -1,46 +1,278 @@
 /* ========================================
-   MIGRATION — PHASE 1
-   The site is still styled by the legacy SCSS (src/scss/app.scss), which
-   ships its own reset. Tailwind's preflight is therefore NOT loaded:
-   only the theme variables and the utilities.
-   Once the SCSS is gone, replace the imports below with
-   `@import "tailwindcss";`.
-   Note: legacy SCSS is unlayered, so it wins over Tailwind utilities.
+   BOUTS DE FICELLE — STYLES
+   Tailwind CSS 4: utilities in the Twig templates. This file holds the
+   design tokens and the base styles. Shared classes that can't be
+   utilities: components.css, typeset.css (WordPress content) and
+   plugins.css (plugin overrides).
+
+   Layers (lowest → highest): theme, base, components, utilities.
+   Plugin stylesheets are unlayered and beat all of them — see plugins.css.
    ======================================== */
 
-@layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss";
+@import "./components.css";
+@import "./typeset.css";
+@import "./plugins.css";
+
 @source "../views/**/*.twig";
 
 /* ========================================
-   BOUTS DE FICELLE TOKENS
-   Same values as src/scss/utils/_variables.scss
-   ex: --color-primary => text-primary, bg-primary
+   TOKENS
+   Values from the former SCSS variables
+   (lighten()/darken() results computed to hex).
    ======================================== */
 
 @theme {
+    --font-*: initial;
     --font-sans: "OpenSans", ui-sans-serif, system-ui, sans-serif;
 
-    --color-primary: #e26134;
-    --color-secondary: #69a99b;
-    --color-tertiary: #be3e82;
-    --color-dark: #293665;
-    --color-light: #f5f5f5;
-    --color-black: #2f3b41;
-    --color-white: #ffffff;
+    /* Breakpoints — same names and values as the legacy sass-mq ones.
+       `m:` = from 768px, `max-m:` = below 768px. */
+    --breakpoint-*: initial;
+    --breakpoint-xxs: 320px;
+    --breakpoint-xs: 450px;
+    --breakpoint-s: 600px;
+    --breakpoint-m: 768px;
+    --breakpoint-l: 1024px;
+    --breakpoint-desktop: 1300px;
+    --breakpoint-wide: 1920px;
 
+    /* Colors */
+    --color-*: initial;
+    --color-white: #ffffff;
+    --color-black: #2f3b41;
+    --color-light: #f5f5f5;
+    --color-dark: #293665;
+    --color-dark-hover: #304077;   /* lighten(dark, 5%) — also body text */
+    --color-dark-pressed: #222c53; /* darken(dark, 5%) */
+    --color-primary: #e26134;
+    --color-primary-hover: #e5724a;
+    --color-primary-pressed: #dd5120;
+    --color-secondary: #69a99b;
+    --color-secondary-hover: #79b2a6;
+    --color-secondary-pressed: #5b9e8f;
+    --color-tertiary: #be3e82;
+    --color-tertiary-hover: #c6508e;
+    --color-tertiary-pressed: #ab3875;
+
+    /* Light backgrounds */
+    --color-soft-dark: #e5e8f4;      /* also inputs, nav hover */
+    --color-soft-primary: #fcece6;
+    --color-soft-secondary: #daeae7;
+    --color-soft-tertiary: #f2d6e5;
+    --color-disabled: #ccd2ea;
+
+    /* "Neg" (light) button variants */
+    --color-neg-primary: #fae5de;
+    --color-neg-primary-hover: #f7d4c7;
+    --color-neg-primary-pressed: #f4c6b5;
+    --color-neg-dark: #e5e8f4;
+    --color-neg-dark-hover: #e1e5f3;
+    --color-neg-dark-pressed: #c4cce7;
+    --color-neg-secondary: #bad7d1;
+    --color-neg-secondary-hover: #c1dbd5;
+    --color-neg-secondary-pressed: #b4d4cd;
+    --color-neg-tertiary: #df9dc0;
+    --color-neg-tertiary-hover: #e1a4c5;
+    --color-neg-tertiary-pressed: #dc95bb;
+    --color-ghost-dark-hover: #d3d9ed;
+    --color-ghost-dark-pressed: #afb9de;
+
+    /* Radius */
     --radius-small: 10px;
     --radius-big: 30px;
+
+    /* Animations */
+    --animate-img-pulse: img-pulse 2s infinite ease-in-out;
+
+    @keyframes img-pulse {
+        0%, 100% { background-color: rgb(245 245 245 / 0); }
+        50% { background-color: rgb(245 245 245 / 0.4); }
+    }
+
+    /* Layout */
+    --container-site: 1500px;
+    --container-small: 885px;
+    --container-typeset: 900px;
 }
 
-/* SVG icons rendered by the icon() Twig helper (see inc/icon.php).
-   The legacy templates still use the atoms/icon.twig macro. */
+/* Tailwind's own `container` utility is not generated: `.container`
+   is the theme's page container (see the components layer below). */
+@source not inline("container");
+
+/* Full-width colored band behind a section, whatever its container.
+   Color and height with `before:` utilities:
+   <div class="band before:h-full before:bg-soft-secondary"> */
+@utility band {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 50%;
+        width: 100vw;
+        transform: translateX(-50%);
+    }
+}
+
+/* ========================================
+   FONTS
+   ======================================== */
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-Regular.ttf") format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-Bold.ttf") format("truetype");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "OpenSans";
+    src: url("/fonts/OpenSans-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+}
+
+/* ========================================
+   BASE
+   ======================================== */
+
 @layer base {
+    html {
+        height: 100%;
+        background-color: var(--color-light);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-sans);
+        font-weight: 400;
+        font-size: 1.25rem;
+        line-height: 2;
+        color: var(--color-dark);
+
+        /* Burger menu open: lock the page behind it. */
+        &.menu-is-open {
+            @variant max-desktop {
+                overflow: hidden !important;
+            }
+        }
+    }
+
+    /* Compatibility with the former reset (Eric Meyer's): inline text
+       elements carry no font style of their own. The content stored in
+       WordPress was written with that (e.g. stacked <big>/<small> that
+       never had any effect). `strong` and `em` are styled in `.typeset`. */
+    b, strong, em, i, small, big, sub, sup, cite, dfn, var, code, kbd, samp, tt, pre, abbr, acronym, q, s, strike, u, del, ins, mark, time {
+        font: inherit;
+        font-size: 100%;
+        vertical-align: baseline;
+    }
+
+    /* Links without a class (inside WordPress text, outside `.typeset`)
+       keep the browser's link color, as before the migration. */
+    a:not([class]) {
+        color: revert;
+    }
+
+    *:focus,
+    *:focus-visible {
+        outline: 3px solid var(--color-tertiary);
+    }
+
+    a:hover,
+    a:active,
+    button:hover,
+    button:active {
+        outline: none;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    /* Form controls and buttons keep the browser's font and placeholder
+       color (as before the Tailwind migration); theme buttons set theirs
+       with utilities. */
+    button,
+    input,
+    select,
+    textarea {
+        font: revert;
+
+        &::placeholder {
+            color: revert;
+        }
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    textarea,
+    select {
+        width: 100%;
+        min-height: 44px;
+        border-radius: 40px;
+        border: 0;
+        background-color: var(--color-soft-dark);
+        padding: 0 50px 0 30px;
+        appearance: none;
+    }
+
+    textarea {
+        padding: 20px;
+        border-radius: var(--radius-small);
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+        height: 44px;
+        overflow: hidden;
+    }
+
+    .disabled {
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="tel"],
+        select {
+            background-color: var(--color-disabled);
+            cursor: not-allowed;
+            font-style: italic;
+        }
+    }
+
+    /* SVG icons rendered by the icon() Twig helper (see inc/icon.php).
+       1em by default, sized with Tailwind (`size-5`…), colored with `text-*`. */
     .icon {
+        display: inline-block;
         width: 1em;
         height: 1em;
         fill: currentColor;
         vertical-align: middle;
     }
+}
+
+/* ========================================
+   PLUGIN CONFLICTS (unlayered on purpose)
+   Plugin stylesheets are unlayered, so they beat every layered rule of
+   the theme (Tailwind included), whatever the specificity. Fixes for such
+   conflicts must stay unlayered too.
+   ======================================== */
+
+/* WP Event Manager sets `*, ::before, ::after { box-sizing: inherit }`,
+   which also hits <html>: give the root the border-box everyone inherits. */
+html {
+    box-sizing: border-box;
 }

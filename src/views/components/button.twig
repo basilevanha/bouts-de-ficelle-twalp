@@ -1,32 +1,64 @@
-{# Available datas :
-    href : string
-    label : string
-    class: string
-    datasAttributes: array('')
-    style : 'neg' | 'ghost'
-    color: 'primary' | 'dark' | 'secondary' | 'tertiary'
- #}
+{# Button (link if `href`, <button> otherwise)
 
- {% set classes = [
+    href: string
+    label: string
+    style: 'default' | 'neg' | 'ghost'
+    color: 'primary' | 'dark' | 'secondary' | 'tertiary'   (ghost: primary | dark)
+    fullWidth: bool       — always 100% wide (otherwise fits its content from `desktop`)
+    pill: bool            — fits its content, fully rounded (filters)
+    tag: bool             — small rounded label (event tags)
+    surface: 'white'      — white background whatever the variant (on colored sections)
+    class: string         — extra classes (spacing, alignment… never colors/width)
+    datasAttributes: [string]  — raw attributes (Alpine directives, x-ref…)
+
+    The `button` class is a hook for parent components, not a style.
+#}
+
+{% set style = style ?: 'default' %}
+{% set color = color ?: 'primary' %}
+
+{% set variants = {
+    default: {
+        primary: 'bg-primary text-light border-primary hover:bg-primary-hover hover:border-primary-hover active:bg-primary-pressed active:border-primary-pressed',
+        dark: 'bg-dark text-light border-dark hover:bg-dark-hover hover:border-dark-hover active:bg-dark-pressed active:border-dark',
+        secondary: 'bg-secondary text-light border-secondary hover:bg-secondary-hover hover:border-secondary-hover active:bg-secondary-pressed active:border-secondary',
+        tertiary: 'bg-tertiary text-light border-tertiary hover:bg-tertiary-hover hover:border-tertiary-hover active:bg-tertiary-pressed active:border-tertiary',
+    },
+    neg: {
+        primary: 'bg-neg-primary text-primary border-neg-primary hover:bg-neg-primary-hover hover:border-neg-primary-hover active:bg-neg-primary-pressed active:border-neg-primary-pressed',
+        dark: 'bg-neg-dark text-dark border-neg-dark hover:bg-neg-dark-hover hover:border-neg-dark-hover active:bg-neg-dark-pressed active:border-neg-dark-pressed',
+        secondary: 'bg-neg-secondary text-secondary border-neg-secondary hover:bg-neg-secondary-hover hover:border-neg-secondary-hover active:bg-neg-secondary-pressed active:border-neg-secondary-pressed',
+        tertiary: 'bg-neg-tertiary text-tertiary border-neg-tertiary hover:bg-neg-tertiary-hover hover:border-neg-tertiary-hover active:bg-neg-tertiary-pressed active:border-neg-tertiary-pressed',
+    },
+    ghost: {
+        primary: 'bg-light text-primary border-primary hover:bg-neg-primary-hover active:bg-neg-primary-pressed',
+        dark: 'bg-light text-dark border-dark hover:bg-neg-dark-hover active:bg-neg-dark-pressed',
+    },
+} %}
+
+{% set variant = variants[style][color] ?? variants.default.primary %}
+
+{% if surface == 'white' %}
+    {% set variant = variant|split(' ')|filter(c => not (c starts with 'bg-' or c starts with 'hover:bg-' or c starts with 'active:bg-'))|join(' ') ~ ' bg-white' %}
+{% endif %}
+
+{% set classes = [
+    'button flex items-center justify-center px-5 py-2.5 font-sans font-bold leading-[1.4] border-3 border-solid cursor-pointer',
+    tag ? 'text-[0.8125rem] capitalize' : 'text-[1.25rem]',
+    'transition-[color,background,border] duration-300 ease-in-out',
+    'outline-none focus-visible:outline-3 focus-visible:outline-solid focus-visible:outline-tertiary',
+    pill ? 'w-max rounded-[120px]' : 'w-full ' ~ (tag ? 'rounded-[50px]' : 'rounded-[12px]'),
+    fullWidth ? 'max-w-full' : (pill ? '' : 'desktop:max-w-max'),
+    variant,
     class,
-    style ? ('button--' ~ style) : 'button--default',
-    color ? ('button--' ~ color) : 'button--primary'
- ]|join(' ') %}
+]|filter(c => c)|join(' ') %}
 
-{% set attributes = datasAttributes|join(' ') %}
+{% set attributes = datasAttributes ? datasAttributes|join(' ') : '' %}
 
 {% if href %}
-    <a
-        href="{{ href }}"
-        class="button {{ classes }}"
-        {{ datasAttributes ? attributes : '' }}
-    >
+    <a href="{{ href }}" class="{{ classes }}" {{ attributes }}>
 {% else %}
-    <button
-        type="button"
-        class="button {{ classes }}"
-        {{ datasAttributes ? attributes : '' }}
-    >
+    <button type="button" class="{{ classes }}" {{ attributes }}>
 {% endif %}
 
         {{ label ? label : '' }}

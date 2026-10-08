@@ -1,54 +1,41 @@
-{# Macros #}
-{% import 'atoms/icon.twig' as icon %}
-
-{# 
+{#
     title: string,
     event: {
-        image: string,
-        title: string,
-        start: date,
-        location: string,
-        edition: url_to_post
+        image, title, start (DateTime), location, url, label,
+        type ('atelier' | 'spectacle'), categoryName, categoryUrl
     }
  #}
-<div class="highlight__container">
+<div class="highlight__container mx-auto w-full max-w-[900px]">
     {% if title %}
-        <h2 class="h2">{{ title }}</h2>
+        <h2 class="h2 relative before:absolute before:top-0 before:left-0 before:-z-1 before:size-[200px] before:-translate-x-[45%] before:-translate-y-[40%] before:rounded-full before:bg-soft-secondary">{{ title }}</h2>
     {% endif %}
 
-    <div class="highlight">
-        <div class="highlight__picture">
-            <div class="highlight__picture__date">
-                <span class="month">{{ event.start|date('M') }}</span>
-                <span class="day">{{ event.start|date('d') }}</span>
+    <div class="relative my-12.5 overflow-hidden rounded-small bg-white shadow-[0_0_40px_0_rgb(41_54_101/0.2)] l:flex l:flex-wrap">
+        <div class="relative aspect-video flex-1 overflow-hidden bg-secondary">
+            <div class="absolute top-5 left-5 z-1 flex flex-col items-center self-center rounded-small bg-light px-5 py-2.5 shadow-[0_4px_4px_0_rgb(0_0_0/0.25)]">
+                <span class="text-[0.9375rem] leading-none font-bold">{{ event.start|date('M') }}</span>
+                <span class="text-[1.875rem] leading-none font-bold">{{ event.start|date('d') }}</span>
             </div>
             {% if event.type %}
-                <div class="highlight__picture__tags">
-                    <a href="{{ event.type == 'spectacle' ? global.pageSpectacles.link : global.pageAteliers.link  }}" class="highlight__picture__tag">{{ event.type }}</a>
-                    <a href="{{ event.categoryUrl }}" class="highlight__picture__tag">{{ event.categoryName }}</a>
+                {% set tag = 'max-w-[200px] overflow-hidden rounded-big bg-light/80 p-2.5 text-[0.75rem] leading-none font-bold text-ellipsis whitespace-nowrap capitalize text-dark backdrop-blur-[40px]' %}
+                <div class="absolute bottom-5 left-5 z-1 flex gap-2.5">
+                    <a href="{{ event.type == 'spectacle' ? global.pageSpectacles.link : global.pageAteliers.link }}" class="{{ tag }}">{{ event.type }}</a>
+                    <a href="{{ event.categoryUrl }}" class="{{ tag }}">{{ event.categoryName }}</a>
                 </div>
             {% endif %}
-            <div class="highlight__picture__wrapper">
-                <img src="{{ event.image }}" alt="{{ event.title }}">
-                {# {% include 'atoms/image.twig' with {img: {
-                    src: event.image,
-                    alt: event.title,
-                    ratio: 'widescreen',
-                    class: 'highlight__picture'
-                }} %} #}
+            <div class="size-full object-cover">
+                <img class="size-full object-cover" src="{{ event.image }}" alt="{{ event.title }}">
             </div>
         </div>
-        <div class="highlight__wrapper">
-            <div class="highlight__main">
-                <div class="highlight__main__tags">
-                </div>
-                {% if event.title %}<p class="highlight__main__title"><span></span>{{ event.title }}</p>{% endif %}
-                {% if event.start %}<p class="highlight__main__time">
-                    {{ icon.sprite('time', 20, 20, "icone d'horloge", site.theme.link ) }}
+        <div class="flex flex-1 p-5">
+            <div class="flex flex-1 flex-col l:pr-2.5">
+                {% if event.title %}<p class="mb-5 text-[1.875rem] leading-none font-extrabold"><span></span>{{ event.title }}</p>{% endif %}
+                {% if event.start %}<p class="mb-5 flex items-center gap-2.5 text-[1.25rem] leading-none">
+                    {{ icon('time', 'size-5') }}
                     {{ event.start|date("d F \\à\\ H:i") }}
                 </p>{% endif %}
-                {% if event.location %}<p class="highlight__main__location">
-                    {{ icon.sprite('localisation', 20, 20, 'icone de localisation', site.theme.link ) }}
+                {% if event.location %}<p class="mb-5 flex items-center gap-2.5 text-[1.25rem] leading-none">
+                    {{ icon('localisation', 'size-5') }}
                     {{ event.location }}
                 </p>{% endif %}
                 {% include 'components/button.twig' with {
@@ -56,8 +43,8 @@
                     label: event.label,
                     style: 'neg',
                     color: 'dark',
-                    class: 'highlight__main__button'
-                } %}
+                    fullWidth: true
+                } only %}
             </div>
         </div>
     </div>

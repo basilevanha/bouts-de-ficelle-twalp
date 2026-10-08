@@ -4,19 +4,43 @@
     layout: 'grid' | 'curve'
  #}
 
-<div class="cards-list" js-cards-list>
+<div class="cards-list" x-data="{ filter: 'all' }">
 
     {% if filters %}
-        <div class="cards-list__filters" js-filters>
-            <button class="button button--ghost button--dark button--selected" data-filter="all" data-selected="true">Tout</button>
+        {# The selected filter looks like a dark default button and can't be clicked again. #}
+        {% set selected = 'data-[selected=true]:pointer-events-none data-[selected=true]:border-dark! data-[selected=true]:bg-dark! data-[selected=true]:text-light!' %}
+        <div class="mb-12.5 flex flex-wrap justify-center gap-5">
+            {% include 'components/button.twig' with {
+                label: 'Tout',
+                style: 'ghost',
+                color: 'dark',
+                pill: true,
+                class: selected,
+                datasAttributes: ['data-filter="all"', ':data-selected="filter === \'all\'"', '@click="filter = \'all\'"']
+            } only %}
 
             {% for filter in filters %}
-                <button class="button button--ghost button--dark" data-filter="{{ filter.value }}">{{ filter.label }}</button>
+                {% include 'components/button.twig' with {
+                    label: filter.label,
+                    style: 'ghost',
+                    color: 'dark',
+                    pill: true,
+                    class: selected,
+                    datasAttributes: ['data-filter="' ~ filter.value ~ '"', ':data-selected="filter === \'' ~ filter.value ~ '\'"', '@click="filter = \'' ~ filter.value ~ '\'"']
+                } only %}
             {% endfor %}
         </div>
     {% endif %}
 
-    <div class="cards-list__items {{ layout ? ('layout--' ~ layout) : 'layout--shift' }}" js-items>
+    {# Default "shift" layout: on 3 columns (a card narrower than 40% of the
+       list), the 1st card of each row goes up, the 3rd goes down. #}
+    {% set layout = layout ?: 'shift' %}
+    {% set shifts = {
+        1: '@max-[40cqw]/card:-translate-y-[100px]',
+        0: '@max-[40cqw]/card:translate-y-[100px]',
+    } %}
+
+    <div class="@container/cards grid gap-12.5 xs:grid-cols-[repeat(auto-fill,minmax(400px,1fr))] {{ layout == 'shift' ? 'min-[1360px]:py-[100px]' }}">
 
         {% for card in cards %}
             {% set datas = {
@@ -29,9 +53,9 @@
                 },
                 showtype: card.showtype
             } %}
-            
-            <div class="cards-list__items__card-wrapper" js-item data-type="{{datas.showtype.value}}" data-visible="true">
-                <div class="cards-list__items__card-wrapper__container">
+
+            <div class="@container/card" data-type="{{datas.showtype.value}}" x-show="filter === 'all' || filter === '{{ datas.showtype.value }}'">
+                <div class="flex h-full {{ layout == 'shift' ? (shifts[loop.index % 3] ?? '') }}">
                     {% include 'modules/card.twig' with datas %}
                 </div>
             </div>

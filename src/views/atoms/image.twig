@@ -1,37 +1,45 @@
-{# 
+{# Responsive image with a blurred placeholder while loading
+
     img: {
         src: string,
         alt: string,
-        resize: {
-            small: int
-            medium: int
-            large: int
-            xlarge: int
-        },
-        class= string,
+        resize: { small: int, medium: int, large: int, xlarge: int },
+        class: string,
         ratio: 'banner' | 'widescreen' | 'tv' | 'square'
     }
+
+    While the image loads, the root has `js-loading` (removed by the
+    `lazyImage` Alpine component): the tiny placeholder is shown, blurred,
+    with a pulse on top.
  #}
 
-{% set imageRatio = img.ratio ? img.ratio : 'tv' %}
+{% set ratios = {
+    banner: 'pb-[20%]',
+    widescreen: 'pb-[56.25%]',
+    tv: 'pb-[75%]',
+    square: 'pb-[100%]',
+} %}
 
 {% set resizeSmall = img.resize.small ? img.resize.small : 450 %}
 {% set resizeMedium = img.resize.medium ? img.resize.medium : 1024 %}
 {% set resizeLarge = img.resize.large ? img.resize.large : 1300 %}
 {% set resizeXlarge = img.resize.xlarge ? img.resize.xlarge : 1440 %}
 
-<div class="img-lazy js-loading ratio--{{ imageRatio }} {{img.class}}" js-img-lazy>
-    <picture class="img-lazy__picture" js-img-lazy-picture>
+<div class="img-lazy js-loading group/img relative overflow-hidden {{ ratios[img.ratio] ?? ratios.tv }} {{ img.class }}" x-data="lazyImage">
+    {# Pulse (on top of everything while loading) #}
+    <span class="pointer-events-none absolute inset-0 z-[1] hidden size-full rounded-[inherit] animate-img-pulse group-[.js-loading]/img:block"></span>
+
+    <picture class="absolute inset-0 group-[.js-loading]/img:opacity-0">
         <source media="(min-width: 1300px)" srcset="{{ img.src|resize(resizeXlarge) }}" />
         <source media="(min-width: 1024px)" srcset="{{ img.src|resize(resizeLarge) }}" />
         <source media="(min-width: 768px)" srcset="{{ img.src|resize(resizeMedium) }}" />
-        <img src="{{ img.src|resize(resizeSmall) }}" alt="{{ img.alt }}" loading="lazy" js-img-lazy-tag />
+        <img class="size-full object-cover" src="{{ img.src|resize(resizeSmall) }}" alt="{{ img.alt }}" loading="lazy" x-ref="img" />
     </picture>
-    <span class="img-lazy__placeholder" js-img-lazy-placeholder>
-        <img
-            class"img-lazy__placeholder"
-            src="{{ img.src|resize(10) }}"
-            alt="{{img.alt}}"
-        />
+
+    <span class="pointer-events-none absolute inset-0 size-full opacity-0 transition-opacity delay-200 duration-200 ease-in-out group-[.js-loading]/img:pointer-events-auto group-[.js-loading]/img:opacity-100">
+        <img class="size-full object-cover" src="{{ img.src|resize(10) }}" alt="{{ img.alt }}" />
     </span>
+
+    {# Blur over the placeholder while loading #}
+    <span class="pointer-events-none absolute inset-0 hidden size-full rounded-[inherit] backdrop-blur-[30px] group-[.js-loading]/img:block"></span>
 </div>

@@ -1,85 +1,98 @@
-{# Macros #}
-{% import 'atoms/icon.twig' as icon %}
+{# Site header — behaviour in src/js/components/header.js.
+   Alpine toggles the state classes on <header>: `header-is-hidden`,
+   `header-is-sticky` and `menu-is-open` (burger menu, below `desktop`);
+   children react to them with `group-[.menu-is-open]/header:` variants.
+   (Class names are written in full: Tailwind can't see concatenated ones.) #}
 
-<header class="site-header" role="navigation" js-header>
-	<div class="site-header__head">
-		<div class="site-header__logo">
-			<a href="{{ site.url}}" js-focus-link id="header-logo">
-				<img src="{{ global.logo.url }}" alt="{{ global.logo.alt}}">
+{% set burgerLine = 'absolute left-1/2 h-[3px] w-1/2 overflow-hidden rounded-[3px] bg-dark [transition:transform_.3s_ease-in-out,opacity_.3s_ease-in-out,top_.3s_ease-in-out,bottom_.3s_ease-in-out]' %}
+
+<header
+	class="site-header group/header fixed top-0 left-0 z-100 h-[70px] w-full overflow-hidden bg-light [transition:top_.2s_ease-in-out,height_.3s_ease-in-out,box-shadow_.2s_ease-in-out] desktop:flex desktop:h-[85px] desktop:items-center [&.header-is-hidden]:-top-[85px] [&.header-is-sticky]:shadow-[0_4px_4px_0_rgb(0_0_0/0.25)] max-desktop:[&.menu-is-open]:h-screen max-desktop:[&.menu-is-open]:overflow-auto"
+	role="navigation"
+	x-data="header"
+	:class="{ 'header-is-hidden': hidden, 'header-is-sticky': sticky, 'menu-is-open': menuOpen }"
+	@scroll.window.passive="onScroll()"
+	@header-hide.window="hide()"
+>
+	<div class="flex max-h-[70px] flex-1 items-center justify-between bg-light px-7.5 py-5">
+		<div class="flex h-[25px] transition-[scale,opacity] duration-300 ease-in-out max-desktop:mr-5 max-desktop:group-[.menu-is-open]/header:scale-80 max-desktop:group-[.menu-is-open]/header:opacity-0">
+			<a href="{{ site.url}}" id="header-logo" @focus="show()">
+				<img class="block h-full w-auto max-w-full" src="{{ global.logo.url }}" alt="{{ global.logo.alt}}">
 			</a>
 		</div>
 
-		<button id="header-burger" class="site-header__burger" js-burger-button>
-			<span class="site-header__burger__line"></span>
-			<span class="site-header__burger__line"></span>
-			<span class="site-header__burger__line"></span>
+		<button id="header-burger" class="relative size-[50px] shrink-0 desktop:hidden" :class="{ 'is-open': menuOpen }" @click="toggleMenu()" aria-label="Menu">
+			<span class="{{ burgerLine }} top-[30%] bottom-auto [transform:translateY(0)_translateX(-50%)] max-desktop:group-[.menu-is-open]/header:top-1/2 max-desktop:group-[.menu-is-open]/header:[transform:translateY(-50%)_translateX(-50%)_rotate(45deg)]"></span>
+			<span class="{{ burgerLine }} top-1/2 [transform:translateY(-50%)_translateX(-50%)] max-desktop:group-[.menu-is-open]/header:opacity-0"></span>
+			<span class="{{ burgerLine }} top-auto bottom-[30%] [transform:translateY(0)_translateX(-50%)] max-desktop:group-[.menu-is-open]/header:bottom-1/2 max-desktop:group-[.menu-is-open]/header:[transform:translateY(50%)_translateX(-50%)_rotate(-45deg)]"></span>
 		</button>
 	</div>
 
-	<div class="site-header__body" js-menu>
+	<div class="px-7.5 pt-5 desktop:ml-auto desktop:p-0">
 		{% if menus %}
-			<ul class="site-header__body__navigation">
+			<ul class="desktop:flex desktop:h-full desktop:items-center">
 				{% set items = menus.header.get_items %}
 				{% for item in items %}
-					<li class="site-header__body__navigation__item">
+					{% set active = post.id == item.object_id %}
+					<li class="relative py-5 text-[1.25rem] font-bold max-desktop:not-last:after:absolute max-desktop:not-last:after:bottom-0 max-desktop:not-last:after:left-0 max-desktop:not-last:after:h-[3px] max-desktop:not-last:after:w-full max-desktop:not-last:after:-translate-y-1/2 max-desktop:not-last:after:rounded-[3px] max-desktop:not-last:after:bg-secondary desktop:mx-[2px] desktop:shrink-0 desktop:text-[1rem] wide:text-[1.25rem]">
 						<a
 							target="{{ item.target }}"
 							href="{{ item.link }}"
-							class="{{ post.id == item.object_id ? ' active ' : '' }}"
-							js-menu-link
+							class="block px-5 desktop:relative desktop:overflow-hidden desktop:rounded-[40px] {{ active ? 'active pointer-events-none cursor-not-allowed text-secondary desktop:bg-dark desktop:text-light' : 'text-dark desktop:hover:bg-soft-dark desktop:active:bg-ghost-dark-hover' }}"
+							@click="onMenuLinkClick()"
 							id="header-navigation-item-{{ item.id }}"
-							{% if post.id == item.object_id %}disabled{% endif %}
+							{% if active %}disabled{% endif %}
 						>{{ item.title }}</a>
 					</li>
 				{% endfor %}
 			</ul>
 		{% endif %}
 
-		<div class="site-header__body__footer">
+		{# Burger menu footer (mobile/tablet) #}
+		<div class="-mx-7.5 flex flex-col items-center bg-dark px-7.5 py-12.5 text-light desktop:hidden">
 
 			{% if global.footer.contact.texte %}
-				<p class="site-header__body__footer__txt">
+				<p>
 					{{ global.footer.contact.texte}}
 				</p>
 			{% endif %}
-			
+
 			{% if global.footer.contact.url %}
 				{% include 'components/button.twig' with {
-					'label': global.footer.contact.label,
-					'href': global.footer.contact.url,
-					datasAttributes: ['js-menu-link'],
-					'isHeader': true,
-					'class': 'site-header__body__footer__contact'
-				} %}
+					label: global.footer.contact.label,
+					href: global.footer.contact.url,
+					class: 'mt-17.5',
+					datasAttributes: ['@click="onMenuLinkClick()"']
+				} only %}
 			{% endif %}
 
-			<div class="socials">
+			<div class="mt-17.5 flex w-full max-w-[600px] justify-between px-7.5 py-5">
 				{% for social in global.socials %}
 					<a
 						href="{{ social.url}}"
 						label="{{ social.name }}"
 						target="_blank"
+						class="text-current"
 						id="header-socials-item-{{ loop.index }}"
 					>
-						{{ icon.sprite(social.name, 30, 30, 'Icone de youtube', site.theme.link) }}
+						{{ icon(social.name, 'size-[30px] align-baseline') }}
 					</a>
 				{% endfor %}
 			</div>
 
-			{{ icon.sprite('logo', 448, 40, 'logo de l\'asbl bouts de ficelle', site.theme.link ) }}
+			<span class="mt-17.5">{{ icon('logo', 'block h-10 w-[448px] max-w-full') }}</span>
 		</div>
 	</div>
 
 	<form
 		role="search"
 		method="get"
-		id="searchform"
-		action="{{site.link}}"
-		class="site-header__search searchform"
 		id="header-search-form"
+		action="{{site.link}}"
+		class="max-desktop:pointer-events-none max-desktop:absolute max-desktop:top-[35px] max-desktop:left-7.5 max-desktop:flex max-desktop:w-[calc(100%-140px)] max-desktop:items-center max-desktop:justify-end max-desktop:opacity-0 max-desktop:[transform:translateX(50px)_translateY(-50%)] max-desktop:[transition:transform_.3s_ease-in-out,opacity_.3s_ease-in-out] max-desktop:group-[.menu-is-open]/header:pointer-events-auto max-desktop:group-[.menu-is-open]/header:opacity-100 max-desktop:group-[.menu-is-open]/header:[transform:translateX(0)_translateY(-50%)] desktop:flex desktop:max-w-[400px] desktop:min-w-[250px] desktop:flex-1 desktop:px-7.5"
 	>
-		<label for="s" class="u-visually-hidden">Chercher dans le site:</label>
-		<input type="text" class"site-header__search__input" name="s" id="s" {{ function('get_search_query') }} />
-		<button type="submit" id="searchsubmit" js-menu-link js-focus-link>{{ icon.sprite('search', 20, 20, 'icone de recherche', site.theme.link) }}</button>
+		<label for="s" class="sr-only">Chercher dans le site:</label>
+		<input type="text" class="h-[44px] w-full overflow-hidden rounded-[40px] border-0 bg-soft-dark pr-[50px] pl-7.5" name="s" id="s" value="{{ function('get_search_query') }}" />
+		<button type="submit" id="searchsubmit" class="absolute top-1/2 right-0 h-full w-[50px] -translate-y-1/2 overflow-hidden rounded-r-[40px] bg-primary text-light transition-colors duration-300 ease-in-out hover:bg-primary-hover active:bg-primary-pressed desktop:right-7.5 desktop:h-[44px]" @click="onMenuLinkClick()" @focus="show()" aria-label="Rechercher">{{ icon('search', 'size-5 align-baseline') }}</button>
 	</form>
 </header>

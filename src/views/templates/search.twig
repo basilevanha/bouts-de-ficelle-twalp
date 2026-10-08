@@ -3,9 +3,9 @@
 
 
 {% block main %}
-	<div class="container search-page post-type-{{post.post_type}}" id="post-{{post.ID}}">
+	<div class="container py-5 [&_.h2]:pb-12.5" id="post-{{post.ID}}">
 
-		<h2 class="h2">Résultat(s) pour : <span class="query">{{ posts.query.query.s }}</span></h2>
+		<h2 class="h2">Résultat(s) pour : <span class="ml-2.5 rounded-small border-3 border-tertiary px-2.5">{{ posts.query.query.s }}</span></h2>
 
 		{% if posts is not empty %}
 			{% for post in posts %}

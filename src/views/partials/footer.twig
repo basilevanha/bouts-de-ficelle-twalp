@@ -1,34 +1,48 @@
-{# Macros #}
-{% import 'atoms/icon.twig' as icon %}
+{# Site footer — on mobile/tablet, the first three blocs are accordions
+   (footerBloc Alpine component). #}
 
-<footer class="site-footer" js-footer>
-    <div class="site-footer__wrapper">
+{# Top half behind the footer card (desktop): matches the end of the page —
+   set `footerTone` in the page template. #}
+{% set tones = {
+    light: 'desktop:before:bg-light',
+    secondary: 'desktop:before:bg-soft-secondary',
+    dark: 'desktop:before:bg-soft-dark',
+} %}
+
+{% set bloc = 'text-light max-desktop:-mx-7.5 max-desktop:mb-5 max-desktop:overflow-hidden max-desktop:bg-secondary max-desktop:px-7.5 max-desktop:pb-5 max-desktop:transition-[height] max-desktop:duration-300 max-desktop:ease-in-out desktop:flex-1 desktop:text-dark' %}
+{% set blocTitle = 'flex h-[60px] w-full justify-between text-left font-sans text-[1.25rem] font-bold tracking-[2px] text-current uppercase max-desktop:items-center' %}
+{% set chevron = 'block transition-transform duration-300 ease-in-out desktop:hidden' %}
+
+<footer class="relative z-1 bg-dark px-7.5 pt-7.5 pb-17.5">
+    <div class="desktop:flex desktop:gap-12.5 desktop:overflow-hidden desktop:rounded-big desktop:bg-soft-primary desktop:px-17.5 desktop:py-12.5 desktop:before:absolute desktop:before:top-0 desktop:before:left-0 desktop:before:-z-1 desktop:before:h-1/2 desktop:before:w-full {{ tones[footerTone] ?? tones.light }}">
 
         {# Navigation #}
-        <div class="bloc" js-bloc>
-            <button class="bloc__title" js-bloc-button>
+        <div class="bloc {{ bloc }}" x-data="footerBloc" :class="{ 'is-closed max-desktop:h-[60px]!': closed }">
+            <button class="{{ blocTitle }}" @click="toggle()">
                 {{ menus.footer.title }}
-                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+                <span class="{{ chevron }}" :class="closed ? '' : 'rotate-180'">{{ icon('chevron-down', 'block h-[15px] w-[25px]') }}</span>
             </button>
-            <div class="bloc__content" js-bloc-content>
-                <ul class="site-footer__navigation">
+            <div class="mt-2.5">
+                <ul>
                     {% set items = menus.footer.get_items %}
                     {% for item in items %}
-                        <li class="site-footer__navigation__item">
+                        <li>
                             <a
                                 target="{{ item.target }}"
                                 href="{{ item.link }}"
                                 id="footer-navigation-{{ item.id }}"
+                                class="text-current hover:text-primary-pressed"
                             >{{ item.title }}</a>
                             {% if item.children %}
-                                <ul>
+                                <ul class="pl-2.5">
                                 {% for subitem in item.children %}
                                     <li>
-                                        {{ icon.sprite('chevron-down', 20, 10, 'Flèche vers le bas', site.theme.link ) }}
+                                        {{ icon('chevron-down', 'h-[10px] w-5 -rotate-90 align-baseline') }}
                                         <a
                                             target="{{ subitem.target }}"
                                             href="{{ subitem.link }}"
                                             id="footer-navigation-sub-{{ item.id }}"
+                                            class="text-current hover:text-primary-pressed"
                                         >{{ subitem.title }}</a>
                                     </li>
                                 {% endfor %}
@@ -41,71 +55,66 @@
         </div>
 
         {# Dons #}
-        <div class="bloc" js-bloc>
-            <button class="bloc__title" js-bloc-button>
+        <div class="bloc {{ bloc }}" x-data="footerBloc" :class="{ 'is-closed max-desktop:h-[60px]!': closed }">
+            <button class="{{ blocTitle }}" @click="toggle()">
                 {{ global.footer.dons.titre }}
-                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+                <span class="{{ chevron }}" :class="closed ? '' : 'rotate-180'">{{ icon('chevron-down', 'block h-[15px] w-[25px]') }}</span>
             </button>
-            <div class="bloc__content" js-bloc-content>
+            <div class="mt-2.5">
                 <p>{{ global.footer.dons.texte }}</p>
 
                 {% include 'components/button.twig' with {
-                    'label': global.footer.dons.label,
-					'href': global.footer.dons.url,
-                } %}
+                    label: global.footer.dons.label,
+                    href: global.footer.dons.url,
+                    class: 'mt-5 desktop:self-start'
+                } only %}
             </div>
         </div>
 
         {# Contact #}
-        <div class="bloc" js-bloc>
-            <button class="bloc__title" js-bloc-button>
+        <div class="bloc {{ bloc }}" x-data="footerBloc" :class="{ 'is-closed max-desktop:h-[60px]!': closed }">
+            <button class="{{ blocTitle }}" @click="toggle()">
                 {{ global.footer.contact.titre }}
-                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+                <span class="{{ chevron }}" :class="closed ? '' : 'rotate-180'">{{ icon('chevron-down', 'block h-[15px] w-[25px]') }}</span>
             </button>
-            <div class="bloc__content" js-bloc-content>
+            <div class="mt-2.5">
                 <p>{{ global.footer.contact.texte }}</p>
 
                 {% include 'components/button.twig' with {
-                    'label': global.footer.contact.label,
-					'href': global.footer.contact.url,
-                } %}
+                    label: global.footer.contact.label,
+                    href: global.footer.contact.url,
+                    class: 'mt-5 desktop:self-start'
+                } only %}
             </div>
         </div>
 
         {# Follow #}
-        <div class="bloc">
-            <button class="bloc__title">
+        <div class="bloc {{ bloc }}">
+            <button class="{{ blocTitle }}">
                 {{ global.footer.socials.titre }}
             </button>
-            <div class="bloc__content">
-                <div class="site-footer__follow">
-
-                    {# <form action="" class="site-footer__follow__newsletter">
-                        <input class="site-footer__follow__newsletter__input" type="text" placeholder="{{ global.footer.socials.label }}">
-                        <button type="submit" class="site-footer__follow__newsletter__btn">
-                            {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
-                        </button>
-                    </form> #}
-
+            <div class="mt-2.5">
+                <div class="flex flex-wrap gap-5">
                     {% for social in global.socials %}
                         <a
                             href="{{ social.url}}"
                             label="{{ social.name }}"
                             title="{{ social.name }}"
                             target="_blank"
-                            class="site-footer__follow__social"
+                            class="flex items-center overflow-hidden rounded-[40px] p-2.5 text-light hover:bg-soft-dark desktop:text-dark"
                             id="footer-socials-{{ loop.index }}"
                         >
-                            {{ icon.sprite(social.name, 30, 30, 'Icone de youtube', site.theme.link) }}
+                            {{ icon(social.name, 'size-[30px]') }}
                         </a>
                     {% endfor %}
 
-                     {% include 'modules/modal.twig' with {
+                    {% include 'modules/modal.twig' with {
                         id: 'mailchimpmodal',
                         title: global.footer.socials.label,
                         label: global.footer.socials.label,
                         description: '',
-                        templatepath: 'modules/mailchimp-form.twig'
+                        templatepath: 'modules/mailchimp-form.twig',
+                        rootClass: 'w-full'
                     } %}
                 </div>
             </div>
@@ -113,9 +122,11 @@
     </div>
 
     {# Footer's footer #}
-    <di class="site-footer__bottom">
-        <p class="site-footer__copyrights">{{ global.copyrights }}</p>
-        {{ icon.sprite('logo', 448, 40, 'logo de l\'asbl bouts de ficelle', site.theme.link ) }}
-        <p class="site-footer__creator">Réalisé par <a class="a" href="https://basile-vanhaverbeke.be" target="_blank">Basile V.</a></p>
-    </di>
+    <div class="mt-12.5 flex items-center justify-center text-light max-desktop:flex-col">
+        <p class="min-w-[300px] flex-[1_0_auto] max-desktop:text-center">{{ global.copyrights }}</p>
+        <span class="min-w-[300px] flex-[1_0_auto] py-5 max-desktop:text-center">
+            {{ icon('logo', 'block h-10 w-[448px] max-w-full') }}
+        </span>
+        <p class="min-w-[300px] flex-[1_0_auto] max-desktop:text-center desktop:text-right">Réalisé par <a class="a" href="https://basile-vanhaverbeke.be" target="_blank">Basile V.</a></p>
+    </div>
 </footer>

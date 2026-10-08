@@ -1,42 +1,49 @@
-{# 
+{#
     id: string,
     title: string,
     label: string,
     description: string,
-    content: string,
-    templatepath: string
+    modalcontent: string   — HTML content
+    templatepath: string   — or a template to include
+    buttonClass: string    — extra classes for the open button (spacing)
+    rootClass: string      — extra classes for the wrapper (width…)
+
+    The dialog grows from its button: see src/js/components/modal.js.
  #}
 
- {# Macros #}
-{% import 'atoms/icon.twig' as icon %}
-
-<div class="modal" js-modal>
+<div
+    class="modal group/modal text-dark {{ rootClass }}"
+    x-data="modal"
+    :class="{ 'is-open': open }"
+    @keydown.escape.window="closeModal()"
+>
     {# Open button modal #}
     {% include 'components/button.twig' with {
         label: label,
-        datasAttributes: ['js-modal-btn-open']
-    } %}
+        class: buttonClass,
+        datasAttributes: ['x-ref="button"', '@click="openModal()"']
+    } only %}
 
     {# Modal #}
     <div
         id="{{ id }}"
-        class="modal__dialog"
+        class="pointer-events-none fixed z-[1000] max-h-[calc(100vh-20px)] min-h-[80vh] w-[1500px] max-w-[calc(100vw-20px)] overflow-auto rounded-small bg-light opacity-0 shadow-[1px_0_16px_5px_var(--color-dark)] transition-[opacity,transform,top,left] duration-200 ease-in-out [transform:translate(-50%,-50%)_scale(0)] m:max-h-[calc(100vh-100px)] m:max-w-[calc(100vw-100px)] group-[.is-open]/modal:pointer-events-auto group-[.is-open]/modal:top-1/2! group-[.is-open]/modal:left-1/2! group-[.is-open]/modal:opacity-100 group-[.is-open]/modal:[transform:translate(-50%,-50%)_scale(1)]"
         role="dialog"
         aria-labelledby="{{ title }}"
         aria-describedby="{{ description }}"
         aria-modal="true"
-        aria-hidden="true"
-        js-modal-dialog
+        :aria-hidden="open ? 'false' : 'true'"
+        x-ref="dialog"
+        x-trap="open"
     >
-        <div class="modal__dialog__header">
-            <p class="modal__dialog__header__title">{{ title }}</p>
-            <button class="modal__dialog__header__close" tabindex="0" aria-label="Fermer" js-modal-btn-close>
-                {{ icon.sprite('close', 20, 20, 'Fermer', site.theme.link ) }}
+        <div class="sticky top-0 left-0 z-2 flex w-full justify-between bg-dark p-5">
+            <p class="m-0! p-0! font-bold text-light!">{{ title }}</p>
+            <button class="flex items-center justify-center rounded-full p-2.5 text-light hover:bg-dark-pressed" tabindex="0" aria-label="Fermer" @click="closeModal()">
+                {{ icon('close', 'size-5') }}
             </button>
         </div>
 
-        <div class="modal__dialog__content typeset">
-            {# <h2 tabindex="0">{{ title }}</h2> #}
+        <div class="typeset p-5">
                 {% if modalcontent %}
                     {{ modalcontent }}
                 {% elseif templatepath %}
@@ -45,5 +52,5 @@
         </div>
     </div>
 
-    <span class="modal__backdrop" js-modal-backdrop></span>
+    <span class="pointer-events-auto fixed inset-0 z-1 hidden h-screen w-screen group-[.is-open]/modal:block" @click="closeModal()"></span>
 </div>

@@ -1,12 +1,13 @@
-{# 
+{#
     {{ isHero }}
     {{ title }}
     {{ text }}
     {{ btns }}
     {{ btnColor }} = 'primary' | 'secondary' | 'tertiary'
+    {{ negSurface }} = 'white' — background of the secondary (neg) buttons
  #}
 
-<div class="paragraph">
+<div class="paragraph flex flex-col gap-5">
     {% if isHero %}
         <h1 class="h1">{{ title }}</h1>
     {% else %}
@@ -21,14 +22,15 @@
         {% endif %}
 
     {% if btns %}
-        <div class="paragraph__btns">
+        <div class="flex gap-5 max-desktop:flex-col">
             {% for btn in btns %}
                 {% include 'components/button.twig' with {
                     label: btn.label,
                     href: btn.url,
                     style: loop.index > 1 ? 'neg' : 'default',
-                    class: 'button--' ~ btnColor
-                } %}
+                    color: btnColor,
+                    surface: loop.index > 1 ? negSurface : null
+                } only %}
             {% endfor %}
         </div>
     {% endif %}

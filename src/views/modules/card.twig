@@ -1,23 +1,23 @@
-{# 
+{#
     img: imgObject
     title: string
     description: string
     btn: button object
  #}
 
-<div class="card">
+<div class="card relative mr-5 mb-5 flex w-full flex-col rounded-small border-3 border-dark bg-dark after:absolute after:top-5 after:left-5 after:-z-1 after:size-full after:rounded-small after:bg-secondary">
     {% include 'atoms/image.twig' with {img: {
         src: img.src,
         alt: img.alt,
         ratio: 'widescreen',
-        class: 'card__img'
+        class: 'w-full rounded-t-small'
     }} %}
 
-    <div class="card__infos">
-        <p class="card__infos__title h3">{{ title }}</p>
-        <p class="card__infos__description">{{ description }}</p>
-        <div class="card__infos__btn">
-	    	{% include 'components/button.twig' with btn|merge({style: 'neg'}) %}
+    <div class="flex flex-1 flex-col rounded-b-small bg-light p-5">
+        <p class="h3 mb-5">{{ title }}</p>
+        <p class="mb-5 h-full leading-[1.5]">{{ description }}</p>
+        <div>
+	    	{% include 'components/button.twig' with btn|merge({style: 'neg', fullWidth: true}) only %}
         </div>
     </div>
 </div>

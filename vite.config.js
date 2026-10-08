@@ -28,19 +28,6 @@ export default defineConfig({
   // In prod: prefix with theme path for correct asset URLs
   base: isProduction ? themeBase : '/',
 
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // Legacy SCSS (src/scss): resolve `@import 'sass-mq/mq'` from node_modules
-        // and silence Dart Sass deprecations (@import, lighten/darken…) until
-        // it is rewritten with Tailwind.
-        loadPaths: [path.resolve(__dirname, 'node_modules')],
-        quietDeps: true,
-        silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div'],
-      },
-    },
-  },
-
   build: {
     outDir: path.resolve(resolvedThemeDir, 'dist'),
     emptyOutDir: true,

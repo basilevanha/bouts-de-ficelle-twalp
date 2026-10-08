@@ -4,7 +4,7 @@ Thème sur mesure de l'asbl Bouts de ficelle ([boutsdeficelle.be](https://boutsd
 
 Le projet est basé sur le boilerplate [WP Twalp](https://github.com/basilevanha/wp-twalp) : Timber (Twig), Vite, Tailwind CSS, Alpine.js et Docker. Le code source vit dans `src/`, WordPress tourne dans `public/` (ignoré par git), et le build produit un thème autonome à déposer sur le serveur.
 
-> Le thème a été migré depuis l'ancien projet DevKinsta (Laravel Mix + SCSS). La migration est faite en deux phases, voir [État de la migration](#état-de-la-migration).
+> Le thème a été migré depuis l'ancien projet DevKinsta (Laravel Mix + SCSS + JS vanilla) vers Tailwind et Alpine, avec un rendu identique. Voir [Historique de la migration](#historique-de-la-migration).
 
 ---
 
@@ -73,10 +73,15 @@ src/
 │   ├── partials/       # Header, footer, sections (image-text, cards-list…)
 │   ├── modules/        # Blocs (card, highlight, modal, paragraph…)
 │   ├── components/     # Bouton
-│   └── atoms/          # Image responsive, macro d'icône
-├── scss/               # Styles historiques (BEM + sass-mq), compilés par Vite
-├── css/main.css        # Tailwind (thème + utilitaires, sans preflight)
-├── js/                 # main.js + composants historiques (Manager)
+│   └── atoms/          # Image responsive
+├── css/
+│   ├── main.css        # Tailwind : tokens (@theme), base, utilitaire `band`
+│   ├── components.css  # .container, .h1/.h2/.h3, .a
+│   ├── typeset.css     # Contenu WordPress (.typeset)
+│   └── plugins.css     # Surcharges de plugins (Ninja Forms), hors layer
+├── js/
+│   ├── main.js
+│   └── components/     # Composants Alpine (header, footerBloc, modal, lazyImage)
 ├── acf-json/           # Groupes de champs et types de contenu ACF (versionnés)
 ├── icons/              # SVG → sprite
 ├── fonts/ images/
@@ -123,16 +128,43 @@ Deux emplacements sont déclarés : `header` et `footer`. Tant qu'aucun menu n'y
 
 ### Icônes
 
-- Les SVG de `src/icons/` sont assemblés en un sprite `assets/icons/sprite.svg`, avec des ids `icon-<nom>`.
-- Les templates historiques utilisent la macro `atoms/icon.twig` : `icon.sprite('time', 20, 20, 'label', site.theme.link)`.
-- Pour le nouveau code, utiliser plutôt la fonction WP Twalp : `{{ icon('time', 'h-5 w-5 text-primary') }}`.
+Les SVG de `src/icons/` sont assemblés en un sprite. Dans Twig : `{{ icon('time', 'size-5 text-primary') }}` (taille et couleur en utilitaires).
 
-### Styles
+### Styles (Tailwind 4)
 
-- Le site est encore stylé par le **SCSS historique** (`src/scss/app.scss`), qui contient son propre reset.
-- Tailwind est chargé **sans preflight** : seulement les variables du thème et les utilitaires. Les couleurs de la charte sont déclarées dans `src/css/main.css` (`primary`, `secondary`, `tertiary`, `dark`, `light`…).
-- ⚠️ Le SCSS n'est dans aucun layer, donc il **gagne sur les utilitaires Tailwind**. Une classe Tailwind ne surcharge pas une propriété déjà définie en SCSS.
-- Les `url()` du SCSS sont **absolues depuis `src/`** (`/fonts/…`, `/images/…`) : Vite les résout et les intègre au build.
+- **Utilitaires dans les templates Twig.** Le CSS ne contient que ce qui ne peut pas être un utilitaire :
+  - les tokens (`@theme` dans `main.css`) ;
+  - la base ;
+  - le conteneur et les titres (`components.css`) ;
+  - le contenu WordPress (`typeset.css`) ;
+  - les surcharges de plugins (`plugins.css`).
+- **Tokens** : les couleurs de la charte (`primary`, `secondary`, `tertiary`, `dark`, `light`, plus les variantes `-hover`, `-pressed`, `soft-*` et `neg-*`) et les points de rupture de l'ancien sass-mq (`xs` 450, `s` 600, `m` 768, `l` 1024, `desktop` 1300, `wide` 1920). `m:` veut dire « à partir de 768px », `max-m:` « en dessous ».
+- **Bandes de couleur pleine largeur** : utilitaire `band`, par exemple `band py-[120px] before:h-full before:bg-soft-secondary`.
+- **Bouton** : toujours passer par `components/button.twig`, avec les paramètres `style`, `color`, `fullWidth`, `pill`, `tag` et `surface`. N'ajouter par `class` que de l'espacement, jamais une couleur ou une largeur : deux utilitaires qui se contredisent sur un même élément donnent un résultat imprévisible.
+- **Contenu WordPress** : l'envelopper dans `.typeset`. Il n'a pas de classes, donc il est stylé depuis ce conteneur.
+
+⚠️ À savoir :
+- **Le CSS des plugins gagne sur celui du thème.** Il n'est dans aucun layer, donc il l'emporte sur tout le CSS rangé dans des layers, Tailwind compris, quelle que soit la spécificité. Une surcharge de plugin doit donc aller dans `plugins.css`, hors layer. C'est aussi ce qui a imposé la règle `html { box-sizing }` en bas de `main.css` (WP Event Manager).
+- **Les noms de classes doivent apparaître en entier dans les templates.** Tailwind ne détecte pas les classes construites par concaténation (`'bg-' ~ color`). Utiliser un tableau de classes complètes (voir `offer-card.twig`, `button.twig`).
+- **Inclure les composants avec `only`.** Un `{% include %}` transmet tout le contexte parent : une variable `class` définie plus haut atterrit alors dans le composant.
+- **Règles de compatibilité avec l'ancien reset** : en bas de la base, voir `main.css`. Les éléments de texte en ligne (`big`, `small`, `b`…) n'ont pas de style par défaut, car le contenu en base de données a été écrit ainsi. Les liens sans classe gardent la couleur du navigateur. Les champs de formulaire gardent la police du navigateur.
+
+### Interactions (Alpine.js)
+
+Les composants sont dans `src/js/components/` et enregistrés dans `main.js` :
+
+| Composant | Rôle |
+| --- | --- |
+| `header` | Masqué au scroll vers le bas, réaffiché (avec ombre) vers le haut ; menu burger |
+| `footerBloc` | Accordéons du footer (mobile et tablette) |
+| `modal` | Modale qui s'ouvre depuis son bouton ; focus piégé (`x-trap`), fermeture avec Échap |
+| `lazyImage` | Retire le flou de chargement des images |
+
+Le filtre des spectacles est un simple `x-data="{ filter: 'all' }"` dans `cards-list.twig`.
+
+### Footer
+
+Sur desktop, la moitié haute derrière la carte du footer prend la couleur de la fin de page. Il suffit de faire `{% set footerTone = 'secondary' %}` (ou `'dark'`) dans le template de la page.
 
 ### Google Tag Manager
 
@@ -152,9 +184,9 @@ Le thème déployé contient `vendor/` (Timber), `dist/` (CSS/JS hashés), `acf-
 
 ---
 
-## État de la migration
+## Historique de la migration
 
-### Phase 1 — fait
+### Phase 1 — structure
 
 Le thème a été déplacé dans la structure WP Twalp, avec un rendu identique à la prod : texte, balisage HTML et sélecteurs CSS vérifiés page par page. Les changements par rapport à l'ancien dépôt :
 
@@ -165,12 +197,26 @@ Le thème a été déplacé dans la structure WP Twalp, avec un rendu identique 
 - Le fuseau horaire vient de `wp_timezone()`. Des vérifications évitent les warnings PHP 8 quand aucun événement n'est mis à la une.
 - Supprimés : `sidebar.php`, Laravel Mix, `static/`, les tests PHPUnit, les exports `jsons/`.
 
-### Phase 2 — à faire
+### Phase 2 — Alpine et Tailwind
 
-1. **JS → Alpine.js** : header (masqué au scroll, burger), accordéons du footer (`x-collapse`), modale (`x-trap` du plugin focus), filtre des cartes, images. Supprimer ensuite `src/js/views/` et le Manager. `evenements.js` ne sert à rien et peut être supprimé dès maintenant.
-2. **SCSS → Tailwind**, partial par partial, en supprimant chaque fichier SCSS une fois converti. À la fin : `@import "tailwindcss";` (avec preflight), puis retirer `sass-embedded`, `sass-mq` et les options SCSS de `vite.config.js`.
-3. **Champs globaux** : les déplacer de la page Accueil vers la page privée **Réglages du site** (`site-settings`, prévue par WP Twalp). Il faudra recopier les valeurs une fois.
-4. **Nettoyage de la prod** : tables de plugins inutilisés (WooCommerce, Fluent Forms, WPForms, Formidable, Jetpack…).
+- **JS** : le « Manager » maison est remplacé par des composants Alpine, avec le même comportement, vérifié par des tests automatisés.
+- **CSS** : les 3 000 lignes de SCSS sont converties en utilitaires Tailwind, et Sass est supprimé.
+- **Vérification** : des captures d'écran avant/après de toutes les pages (desktop, mobile, menu ouvert, modale, filtre…), en dev comme en production, montrent un rendu identique au pixel près.
+- **Changements volontaires** :
+  - le champ de recherche affiche la recherche en cours (avant, elle était écrite comme un attribut HTML invalide) ;
+  - le contour de focus des boutons n'apparaît plus qu'à la navigation clavier (`focus-visible`) ;
+  - la modale se ferme avec Échap ;
+  - la zone « Message » des formulaires Ninja Forms garde 200 px quel que soit l'ordre de chargement des CSS ;
+  - la balise `<di>` du footer est corrigée en `<div>`.
+
+### Pistes pour la suite
+
+1. **Champs globaux** : les déplacer de la page Accueil vers la page privée **Réglages du site** (`site-settings`, prévue par WP Twalp). Il faudra recopier les valeurs une fois.
+2. **Liens dans les textes WordPress** hors `.typeset` : ils gardent le bleu du navigateur, comme avant. Leur donner la couleur du site serait plus cohérent.
+3. **Dates** : `event.start|date('M')` affiche le mois en anglais (« Nov »). Passer par une date localisée (`wp_date`).
+4. **Polices** : convertir les `.ttf` en `.woff2`, plus légers.
+5. **Nettoyage de la prod** : plugins inactifs et tables de plugins inutilisés (WooCommerce, Fluent Forms, WPForms, Formidable, Jetpack…).
+6. **Cron WordPress en prod** : des tâches planifiées sont en retard depuis juin 2026. Configurer une vraie tâche cron chez Infomaniak.
 
 ---
 

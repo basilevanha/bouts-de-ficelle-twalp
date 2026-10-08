@@ -1,6 +1,5 @@
 {% extends "layouts/base.twig" %}
 
-{% set template = 'spectacles' %}
 
 {# Variables disponibles :
 		{{ dump(hero) }}
@@ -24,9 +23,9 @@
 
 
 {% block main %}
-	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+	<div class="container flex flex-col gap-17.5" id="post-{{post.ID}}">
 
-		<div class="section--hero">
+		<div>
 			{% include 'partials/image-text.twig' with heroDatas %}
 		</div>
 
@@ -34,8 +33,8 @@
 			{% include 'modules/highlight.twig' with {title: 'Spectacle à la une', event: global.highlight} %}
 		{% endif %}
 
-		<div class="section--spectacles">
-			<h2 class="h2">{{ liste.titre }}</h2>
+		<div class="my-17.5">
+			<h2 class="h2 mb-12.5">{{ liste.titre }}</h2>
 			{% include 'partials/cards-list.twig' with {cards: spectacles, filters: filters, layout: 'grid'} %}
 		</div>
 	</div>

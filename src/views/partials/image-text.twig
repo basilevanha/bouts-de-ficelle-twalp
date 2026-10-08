@@ -1,35 +1,52 @@
-{# Variables
-    paragraphDatas: {}
-    img:  imgObject
-    revert: bool
-    bg: string
-    class: string
-    ratioImg: number
+{# Image + text side by side (stacked below `l`)
+
+    paragraphDatas: {}       — see modules/paragraph.twig
+    img: imgObject
+    revert: bool             — image on the right (from `l`)
+    ratioImg: 150 | 120 | 110 | 100 | 90 | 80   — image share of the width
     btnColor: 'primary' | 'secondary' | 'tertiary'
+    variant: 'hero' | 'cours' — homepage sections (shape background / colored frame)
  #}
 
+{% set paragraphDatas = paragraphDatas|merge({btnColor}) %}
 
- {% set paragraphDatas = paragraphDatas|merge({btnColor}) %}
+{# [image flex, text flex] #}
+{% set ratios = {
+    150: ['flex-[1.5]', 'flex-[0.5_0]'],
+    120: ['flex-[1.2]', 'flex-[0.8_0]'],
+    110: ['flex-[1.1]', 'flex-[0.9_0]'],
+    100: ['flex-[1_0]', 'l:flex-[1_0]'],
+    90: ['flex-[0.9]', 'flex-[1.1_0]'],
+    80: ['flex-[0.8]', 'flex-[1.2_0]'],
+} %}
+{% set ratio = ratios[ratioImg ?: 100] ?? ratios[100] %}
+{% set hero = variant == 'hero' %}
 
- {% set classes =  [
-    'image-text',
-    class,
-    bg ? 'image-text--' ~ bg : null,
-    revert ? 'image-text--revert' : null
- ]|join(' ') %}
+{% set classes = [
+    'flex max-l:flex-col l:items-center',
+    hero
+        ? 'relative my-5 gap-2.5 l:my-17.5 l:px-12.5 l:py-5 before:absolute before:inset-0 before:-z-1 before:h-3/4 before:bg-[url(/images/accueil-hero-shape.svg)] before:bg-size-[100%_100%] before:bg-center before:bg-no-repeat max-m:before:top-12.5 max-m:before:-ml-2.5 max-m:before:w-[calc(100vw-20px)] l:before:inset-0 l:before:h-full'
+        : 'my-12.5 max-l:gap-12.5',
+    revert ? 'l:flex-row-reverse',
+]|filter(c => c)|join(' ') %}
 
+{% set imgClasses = [
+    'flex justify-center',
+    ratio[0],
+    hero ? 'l:scale-[1.15]',
+    variant == 'cours' ? 'relative before:absolute before:inset-x-5 before:inset-y-12.5 before:-z-1 before:overflow-hidden before:rounded-big before:bg-soft-primary',
+]|filter(c => c)|join(' ') %}
 
-<div
-    class="{{ classes }} ratio-img--{{ ratioImg ? ratioImg : 100 }}"
->
-    <div class="image-text__img">
+<div class="{{ classes }}">
+    <div class="{{ imgClasses }}">
         {% include 'atoms/image.twig' with {img: {
             src: img.url,
-            alt: img.alt
+            alt: img.alt,
+            class: 'w-full'
         }} %}
     </div>
 
-    <div class="image-text__text">
+    <div class="{{ ratio[1] }} {{ hero ? 'l:ml-auto l:max-w-[500px] l:px-5 l:py-12.5' : 'l:p-12.5' }}">
         {% include 'modules/paragraph.twig' with paragraphDatas %}
     </div>
 </div>

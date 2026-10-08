@@ -1,27 +1,17 @@
-{# Variables
-    paragraphDatas: {}
-    img:  imgObject
-    revert: bool
-    bg: string
-    class: string
+{# Text + list of ateliers side by side (stacked below `l`)
+
+    paragraphDatas: {}   — see modules/paragraph.twig
+    items: []            — see modules/ateliers-liste.twig
+    revert: bool         — list on the left (from `l`)
+    class: string        — extra classes (spacing, background band…)
  #}
 
- {% set classes =  [
-    'text-liste',
-    class,
-    bg ? 'text-liste--' ~ bg : null,
-    revert ? 'text-liste--revert' : null
- ]|join(' ') %}
-
-
-<div
-    class="{{ classes }}"
->
-    <div class="text-liste__text">
+<div class="flex max-l:flex-col max-l:gap-12.5 l:items-center {{ revert ? 'l:flex-row-reverse' }} {{ class }}">
+    <div class="l:flex-1 l:p-12.5">
         {% include 'modules/paragraph.twig' with paragraphDatas %}
     </div>
 
-    <div class="text-liste__items">
+    <div class="flex flex-1 shrink-0 justify-center">
         {% include 'modules/ateliers-liste.twig' with items %}
     </div>
 </div>

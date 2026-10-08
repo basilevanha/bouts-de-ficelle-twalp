@@ -1,6 +1,6 @@
 {% extends "layouts/base.twig" %}
 
-{% set template = 'accueil' %}
+{% set footerTone = 'secondary' %}
 
 {# Variables disponibles :
 	{{ dump(hero) }}
@@ -15,7 +15,8 @@
 	isHero: true,
 	title: hero.titre,
 	text: hero.texte,
-	btns: hero.btns
+	btns: hero.btns,
+	negSurface: 'white'
 } %}
 
 {% set coursDatas = {
@@ -32,13 +33,13 @@
 
 {% block main %}
 
-	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+	<div class="container flex flex-col gap-17.5" id="post-{{post.ID}}">
 
 		{% include 'partials/image-text.twig' with {
 			paragraphDatas: heroDatas,
 			img: hero.img,
 			revert: true,
-			class: "image-text--hero"
+			variant: "hero"
 		} %}
 		
 		{% if (global.highlight.toggle == true) %}
@@ -49,14 +50,14 @@
 		{% include 'partials/image-text.twig' with {
 			paragraphDatas: coursDatas,
 			img: cours.img,
-			bg: 'secondary',
-			class: "image-text--cours"
+			variant: "cours"
 		} %}
 
 		{% include 'partials/text-liste.twig' with {
 			paragraphDatas: ateliersDatas,
 			items: ateliers.items,
-			btnColor: 'secondary'
+			btnColor: 'secondary',
+			class: 'band py-[120px] before:h-full before:bg-soft-secondary'
 		} %}
 
 	</div>

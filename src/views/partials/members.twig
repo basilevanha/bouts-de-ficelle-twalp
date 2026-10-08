@@ -1,13 +1,21 @@
-<div class="members">
+{# Staggered on a 4-column grid: cards 1, 2 and 4 of each row are shifted
+   when a card is narrower than 30% of the list (container queries). #}
+{% set shifts = {
+    1: '@max-[30cqw]/card:translate-y-[200px]',
+    2: '@max-[30cqw]/card:translate-y-[100px]',
+    0: '@max-[30cqw]/card:-translate-y-[100px]',
+} %}
+
+<div class="@container/members grid gap-12.5 xs:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] min-[1490px]:pb-[200px]">
     {% for member in members %}
         {% set memberDatas = {
             img: member.img,
             name: member.title,
             role: member.fonction
         } %}
-    
-        <div class="members__card-wrapper">
-            <div class="members__card-wrapper__container">
+
+        <div class="@container/card">
+            <div class="flex h-full {{ shifts[loop.index % 4] ?? '' }}">
                 {% include 'modules/member-card.twig' with memberDatas %}
             </div>
         </div>

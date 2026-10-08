@@ -1,16 +1,16 @@
 {% extends "layouts/base.twig" %}
 
 {% block main %}
-	<article class="single-spectacle container post-type-{{ post.post_type }}" id="post-{{ post.ID }}">
+	<article class="container" id="post-{{ post.ID }}">
 
-		<div class="single-spectacle__hero">
+		<div class="mx-auto w-full max-w-[900px]">
 			{% include 'atoms/image.twig' with {img: {
 				src: post.cover.url,
 				alt: post.title,
 				ratio: 'banner'
 			}} %}
 
-			<div class="single-spectacle__hero__breadcrumb">
+			<div class="text-[1rem] font-bold">
 				<a class="a" id="spectacle-breadcrumb-home" href="{{ site.link }}">Accueil</a>
 				>
 				<a class="a" id="spectacle-breadcrumb-spectacles" href="{{ global.pageSpectacles.link }}">{{ global.pageSpectacles.title }}</a>
@@ -19,7 +19,7 @@
 			</div>
 		</div>
 
-		<div class="single-spectacle__content typeset">
+		<div class="typeset pt-12.5 [&_h4]:mt-2.5">
 			<h1>{{ post.title }}</h1>
 
 			{{ post.content }}

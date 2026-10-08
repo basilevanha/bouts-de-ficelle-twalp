@@ -5,15 +5,15 @@
 	<html class="no-js no-svg" {{ site.language_attributes }}> <!--<![endif]-->
 		{% include 'partials/head.twig' %}
 
-	<body class="{{body_class}}" data-template="base.twig" template="{{ template | default('page') }}">
+	<body class="{{body_class}}">
 		{{ function('wp_body_open') }}
 
-		<div class="site-wrapper">
+		<div class="flex h-full flex-col">
 			{% block header %}
 				{% include 'partials/header.twig' %}
 			{% endblock %}
 
-			<main class="site-container" role="main" js-container>
+			<main class="flex-[1_0_auto] overflow-hidden pt-[70px] m:pt-[85px]" role="main">
 				{% block main %}{% endblock %}
 			</main>
 

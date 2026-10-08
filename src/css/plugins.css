@@ -1,0 +1,108 @@
+/* ========================================
+   PLUGIN OVERRIDES — unlayered on purpose
+   Plugin stylesheets are unlayered: only unlayered rules can override them.
+   ======================================== */
+
+/* Tailwind's preflight gives every element `border: 0 solid`. Plugin CSS
+   is written against the browser default (`border-style: none`): e.g. WP
+   Event Manager sets `border-width: 7px` on hovered event cards, which
+   would show up as a thick blue border. Restore the browser default inside
+   plugin markup — zero specificity, so any border a plugin declares wins.
+   ---------------------------------------- */
+
+:where([class*="wpem"], [class*="wpem"] *, .nf-form-cont, .nf-form-cont *, .foogallery, .foogallery *, #mc_embed_shell, #mc_embed_shell *) {
+    border-style: revert;
+}
+
+/* Ninja Forms
+   ---------------------------------------- */
+
+.nf-form-layout,
+.bdf-form-wrapper {
+    .nf-error.field-wrap .nf-field-element:after {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        height: 44px;
+        line-height: 44px;
+    }
+
+    .nf-field-container:not(.submit-container, .textarea-container) .nf-field-element {
+        border-radius: 40px;
+    }
+
+    input[type="text"].ninja-forms-field,
+    input[type="email"].ninja-forms-field,
+    input[type="number"].ninja-forms-field,
+    input[type="tel"].ninja-forms-field,
+    textarea.ninja-forms-field,
+    select.ninja-forms-field {
+        width: 100%;
+        height: 44px;
+        border-radius: 0;
+        border: 0;
+        background-color: var(--color-soft-dark);
+        padding: 0 50px 0 30px;
+        appearance: none;
+    }
+
+    .textarea-wrap {
+        .nf-field-element {
+            border-radius: var(--radius-small);
+            overflow: hidden;
+        }
+
+        textarea.ninja-forms-field {
+            /* Same height as Ninja Forms' own CSS: without it, the 44px input
+               height above wins or loses depending on the stylesheet order. */
+            height: 200px;
+            padding: 20px;
+        }
+    }
+}
+
+/* Submit button: give the field the classes `button button--default` in
+   Ninja Forms. Same look as the theme's default button (components/button.twig). */
+input[type="submit"].button.ninja-forms-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 20px;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    border: solid 3px;
+    border-radius: 12px;
+    outline: none;
+    cursor: pointer;
+    transition:
+        color .3s ease-in-out,
+        background .3s ease-in-out,
+        border .3s ease-in-out;
+
+    @media (width >= 1300px) {
+        max-width: max-content;
+    }
+
+    &:focus-visible {
+        outline: 3px solid var(--color-tertiary);
+    }
+
+    &.button--default {
+        background-color: var(--color-primary);
+        color: var(--color-light);
+        border-color: var(--color-primary);
+
+        &:hover {
+            background-color: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
+        }
+
+        &:active {
+            background-color: var(--color-primary-pressed);
+            border-color: var(--color-primary-pressed);
+        }
+    }
+}

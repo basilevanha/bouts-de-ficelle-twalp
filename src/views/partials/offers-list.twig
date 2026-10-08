@@ -1,15 +1,7 @@
-<div class="offers-list">
+{% set colors = ['primary', 'secondary', 'tertiary'] %}
+
+<div class="grid gap-12.5 pt-5 pb-17.5 xs:grid-cols-[repeat(auto-fill,minmax(400px,1fr))]">
     {% for card in offers %}
-        {% set color = "primary" %}
-
-        {% if loop.index == 2 %}
-            {% set color = "secondary" %}
-        {% endif %}
-
-        {% if loop.index == 3 %}
-            {% set color = "tertiary" %}
-        {% endif %}
-
         {% set datas = {
             img: card.img,
             title: card.titre,
@@ -20,10 +12,10 @@
             number: card.nombre,
             calendar: card.calendrier,
             btn: card.btn,
-            color: color
+            color: colors[loop.index0] ?? 'primary'
         } %}
-        
-        <div class="offers-list__card-wrapper">
+
+        <div class="flex h-full">
             {% include 'modules/offer-card.twig' with datas %}
         </div>
 
