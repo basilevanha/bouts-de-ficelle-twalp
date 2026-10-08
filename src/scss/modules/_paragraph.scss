@@ -1,0 +1,14 @@
+.paragraph {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-small;
+
+    &__btns {
+        display: flex;
+        gap: $spacing-small;
+
+        @include mq($until: desktop) {
+            flex-direction: column;
+        }
+    }
+}

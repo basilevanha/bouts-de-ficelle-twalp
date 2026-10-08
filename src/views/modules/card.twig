@@ -1,0 +1,23 @@
+{# 
+    img: imgObject
+    title: string
+    description: string
+    btn: button object
+ #}
+
+<div class="card">
+    {% include 'atoms/image.twig' with {img: {
+        src: img.src,
+        alt: img.alt,
+        ratio: 'widescreen',
+        class: 'card__img'
+    }} %}
+
+    <div class="card__infos">
+        <p class="card__infos__title h3">{{ title }}</p>
+        <p class="card__infos__description">{{ description }}</p>
+        <div class="card__infos__btn">
+	    	{% include 'components/button.twig' with btn|merge({style: 'neg'}) %}
+        </div>
+    </div>
+</div>

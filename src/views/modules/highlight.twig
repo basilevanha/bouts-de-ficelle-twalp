@@ -1,0 +1,64 @@
+{# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+{# 
+    title: string,
+    event: {
+        image: string,
+        title: string,
+        start: date,
+        location: string,
+        edition: url_to_post
+    }
+ #}
+<div class="highlight__container">
+    {% if title %}
+        <h2 class="h2">{{ title }}</h2>
+    {% endif %}
+
+    <div class="highlight">
+        <div class="highlight__picture">
+            <div class="highlight__picture__date">
+                <span class="month">{{ event.start|date('M') }}</span>
+                <span class="day">{{ event.start|date('d') }}</span>
+            </div>
+            {% if event.type %}
+                <div class="highlight__picture__tags">
+                    <a href="{{ event.type == 'spectacle' ? global.pageSpectacles.link : global.pageAteliers.link  }}" class="highlight__picture__tag">{{ event.type }}</a>
+                    <a href="{{ event.categoryUrl }}" class="highlight__picture__tag">{{ event.categoryName }}</a>
+                </div>
+            {% endif %}
+            <div class="highlight__picture__wrapper">
+                <img src="{{ event.image }}" alt="{{ event.title }}">
+                {# {% include 'atoms/image.twig' with {img: {
+                    src: event.image,
+                    alt: event.title,
+                    ratio: 'widescreen',
+                    class: 'highlight__picture'
+                }} %} #}
+            </div>
+        </div>
+        <div class="highlight__wrapper">
+            <div class="highlight__main">
+                <div class="highlight__main__tags">
+                </div>
+                {% if event.title %}<p class="highlight__main__title"><span></span>{{ event.title }}</p>{% endif %}
+                {% if event.start %}<p class="highlight__main__time">
+                    {{ icon.sprite('time', 20, 20, "icone d'horloge", site.theme.link ) }}
+                    {{ event.start|date("d F \\à\\ H:i") }}
+                </p>{% endif %}
+                {% if event.location %}<p class="highlight__main__location">
+                    {{ icon.sprite('localisation', 20, 20, 'icone de localisation', site.theme.link ) }}
+                    {{ event.location }}
+                </p>{% endif %}
+                {% include 'components/button.twig' with {
+                    href: event.url,
+                    label: event.label,
+                    style: 'neg',
+                    color: 'dark',
+                    class: 'highlight__main__button'
+                } %}
+            </div>
+        </div>
+    </div>
+</div>

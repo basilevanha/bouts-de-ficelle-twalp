@@ -1,0 +1,36 @@
+# WordPress installation
+public/
+
+# Dependencies
+node_modules/
+vendor/
+
+# Environment
+.env
+.env.local
+.setup-state
+
+# Database dumps
+database/*.sql
+
+# Build artifacts
+dist/
+
+# Timber scaffold (temporary)
+_tmp_timber/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Claude Code (dev planning files)
+.claude/*.md
+
+# Logs
+*.log
+npm-debug.log*

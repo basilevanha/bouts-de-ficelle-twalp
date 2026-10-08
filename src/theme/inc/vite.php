@@ -1,0 +1,106 @@
+<?php
+/**
+ * Vite asset helper
+ *
+ * Enqueues Vite dev server assets in development,
+ * or hashed production assets from manifest.json.
+ */
+
+namespace App;
+
+/**
+ * Check if Vite dev server is running.
+ */
+function vite_is_dev(): bool {
+	$hot_file = get_template_directory() . '/dist/hot';
+	return file_exists($hot_file);
+}
+
+/**
+ * Get the Vite dev server URL.
+ */
+function vite_dev_server_url(): string {
+	$hot_file = get_template_directory() . '/dist/hot';
+	if (file_exists($hot_file)) {
+		return trim(file_get_contents($hot_file));
+	}
+	return 'http://localhost:5173';
+}
+
+/**
+ * Inject Vite HMR client in dev mode (runs early in wp_head).
+ */
+add_action('wp_head', function () {
+	if (!vite_is_dev()) {
+		return;
+	}
+	$dev_url = vite_dev_server_url();
+	echo '<script type="module" src="' . esc_url($dev_url . '/@vite/client') . '"></script>' . "\n";
+}, 1);
+
+/**
+ * Enqueue Vite assets.
+ */
+function vite_enqueue_assets(): void {
+	if (vite_is_dev()) {
+		$dev_url = vite_dev_server_url();
+
+		wp_enqueue_script(
+			'wp-twalp-main',
+			$dev_url . '/js/main.js',
+			[],
+			null,
+			true
+		);
+	} else {
+		// Production: read manifest.json
+		$manifest_path = get_template_directory() . '/dist/.vite/manifest.json';
+
+		if (!file_exists($manifest_path)) {
+			return;
+		}
+
+		$manifest = json_decode(file_get_contents($manifest_path), true);
+
+		if (!$manifest) {
+			return;
+		}
+
+		// CSS
+		if (isset($manifest['js/main.js']['css'])) {
+			foreach ($manifest['js/main.js']['css'] as $index => $css_file) {
+				wp_enqueue_style(
+					'wp-twalp-style-' . $index,
+					get_template_directory_uri() . '/dist/' . $css_file,
+					[],
+					null
+				);
+			}
+		}
+
+		// JS
+		if (isset($manifest['js/main.js']['file'])) {
+			wp_enqueue_script(
+				'wp-twalp-main',
+				get_template_directory_uri() . '/dist/' . $manifest['js/main.js']['file'],
+				[],
+				null,
+				true
+			);
+		}
+	}
+}
+
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\vite_enqueue_assets');
+
+/**
+ * Add type="module" to our script tag (replaces WP's default type="text/javascript").
+ */
+add_filter('script_loader_tag', function ($tag, $handle) {
+	if ($handle === 'wp-twalp-main') {
+		$tag = str_replace("type='text/javascript'", '', $tag);
+		$tag = str_replace('type="text/javascript"', '', $tag);
+		return str_replace('<script ', '<script type="module" ', $tag);
+	}
+	return $tag;
+}, 10, 2);

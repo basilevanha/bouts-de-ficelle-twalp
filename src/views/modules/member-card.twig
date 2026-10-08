@@ -1,0 +1,18 @@
+{# 
+    img: imgObject
+    name: string
+    role: string
+ #}
+
+
+<div class="member-card">
+    {% include 'atoms/image.twig' with {img: {
+        src: img.url,
+        alt: img.alt,
+        class: 'member-card__img'
+    }} %}
+    <div class="member-card__infos">
+        <p class="member-card__infos__name">{{ name }}</p>
+        <p class="member-card__infos__role">{{ role }}</p>
+    </div>
+</div>

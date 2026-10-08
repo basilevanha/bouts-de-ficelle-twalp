@@ -1,0 +1,35 @@
+{# 
+    {{ isHero }}
+    {{ title }}
+    {{ text }}
+    {{ btns }}
+    {{ btnColor }} = 'primary' | 'secondary' | 'tertiary'
+ #}
+
+<div class="paragraph">
+    {% if isHero %}
+        <h1 class="h1">{{ title }}</h1>
+    {% else %}
+        <h2 class="h2">{{ title }}</h2>
+    {% endif %}
+        {% if '<p>' in text %}
+            <div class="typeset">
+                {{ text }}
+            </div>
+        {% else %}
+            <p>{{ text }}</p>
+        {% endif %}
+
+    {% if btns %}
+        <div class="paragraph__btns">
+            {% for btn in btns %}
+                {% include 'components/button.twig' with {
+                    label: btn.label,
+                    href: btn.url,
+                    style: loop.index > 1 ? 'neg' : 'default',
+                    class: 'button--' ~ btnColor
+                } %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

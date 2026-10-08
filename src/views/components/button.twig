@@ -1,0 +1,38 @@
+{# Available datas :
+    href : string
+    label : string
+    class: string
+    datasAttributes: array('')
+    style : 'neg' | 'ghost'
+    color: 'primary' | 'dark' | 'secondary' | 'tertiary'
+ #}
+
+ {% set classes = [
+    class,
+    style ? ('button--' ~ style) : 'button--default',
+    color ? ('button--' ~ color) : 'button--primary'
+ ]|join(' ') %}
+
+{% set attributes = datasAttributes|join(' ') %}
+
+{% if href %}
+    <a
+        href="{{ href }}"
+        class="button {{ classes }}"
+        {{ datasAttributes ? attributes : '' }}
+    >
+{% else %}
+    <button
+        type="button"
+        class="button {{ classes }}"
+        {{ datasAttributes ? attributes : '' }}
+    >
+{% endif %}
+
+        {{ label ? label : '' }}
+
+{% if href %}
+    </a>
+{% else %}
+    </button>
+{% endif %}

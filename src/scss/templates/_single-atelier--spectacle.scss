@@ -1,0 +1,31 @@
+.single-atelier,
+.single-spectacle {
+    &__hero {
+        width: 100%;
+        max-width: $typeset-width;
+        margin: 0 auto;
+
+        &__breadcrumb {
+            @include font(bold);
+            font-size: rem(16px);
+        }
+    }
+
+    &__content {
+        padding-top: $spacing-md;
+
+        h4 {
+            margin-top: $spacing-xsmall;
+        }
+
+        .editions {
+            margin: $spacing-small 0;
+            padding: $spacing-small;
+            border: 3px solid color(dark);
+
+            &__list {
+                margin: 0 ;
+            }
+        }
+    }
+}

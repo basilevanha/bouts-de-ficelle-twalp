@@ -1,0 +1,64 @@
+{% extends "layouts/base.twig" %}
+
+{% set template = 'accueil' %}
+
+{# Variables disponibles :
+	{{ dump(hero) }}
+	{{ dump(actus) }}
+	{{ dump(cours) }}
+	{{ dump(ateliers) }}
+ #}
+
+
+{# Prepare datas #}
+{% set heroDatas = {
+	isHero: true,
+	title: hero.titre,
+	text: hero.texte,
+	btns: hero.btns
+} %}
+
+{% set coursDatas = {
+	title: cours.titre,
+	text: cours.texte,
+	btns: cours.btns
+} %}
+
+{% set ateliersDatas = {
+	title: ateliers.infos.titre,
+	text: ateliers.infos.texte,
+	btns: [ateliers.infos.btn]
+} %}
+
+{% block main %}
+
+	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+
+		{% include 'partials/image-text.twig' with {
+			paragraphDatas: heroDatas,
+			img: hero.img,
+			revert: true,
+			class: "image-text--hero"
+		} %}
+		
+		{% if (global.highlight.toggle == true) %}
+			{% include 'modules/highlight.twig' with {title: actus.titre, event: global.highlight} %}
+		{% endif %}
+
+
+		{% include 'partials/image-text.twig' with {
+			paragraphDatas: coursDatas,
+			img: cours.img,
+			bg: 'secondary',
+			class: "image-text--cours"
+		} %}
+
+		{% include 'partials/text-liste.twig' with {
+			paragraphDatas: ateliersDatas,
+			items: ateliers.items,
+			btnColor: 'secondary'
+		} %}
+
+	</div>
+	<!-- /content-wrapper -->
+{% endblock %}

@@ -1,0 +1,41 @@
+{# Variables disponibles :
+    {{ dump(cards) }}
+    filters: ['string']
+    layout: 'grid' | 'curve'
+ #}
+
+<div class="cards-list" js-cards-list>
+
+    {% if filters %}
+        <div class="cards-list__filters" js-filters>
+            <button class="button button--ghost button--dark button--selected" data-filter="all" data-selected="true">Tout</button>
+
+            {% for filter in filters %}
+                <button class="button button--ghost button--dark" data-filter="{{ filter.value }}">{{ filter.label }}</button>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="cards-list__items {{ layout ? ('layout--' ~ layout) : 'layout--shift' }}" js-items>
+
+        {% for card in cards %}
+            {% set datas = {
+                img: card.thumbnail,
+                title: card.title,
+                description: card.description,
+                btn: {
+                    label: card.label,
+                    href: card.link
+                },
+                showtype: card.showtype
+            } %}
+            
+            <div class="cards-list__items__card-wrapper" js-item data-type="{{datas.showtype.value}}" data-visible="true">
+                <div class="cards-list__items__card-wrapper__container">
+                    {% include 'modules/card.twig' with datas %}
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+</div>

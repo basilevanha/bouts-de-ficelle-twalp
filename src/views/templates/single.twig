@@ -1,0 +1,8 @@
+{% extends "layouts/base.twig" %}
+
+{% block main %}
+	<div class="container typeset post-type-{{post.post_type}}" id="post-{{post.ID}}">
+		{{post.content}}
+	</div>
+	<!-- /content-wrapper -->
+{% endblock %}

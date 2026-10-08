@@ -1,0 +1,42 @@
+.ateliers-liste {
+    background-color: color(dark);
+    border-radius: $radius-big;
+    overflow: hidden;
+    color: color(light);
+
+    &__items {
+        padding: $spacing-small;
+    }
+
+    &__item {
+        padding: $spacing-xsmall 0;
+
+        &__text {
+            @include font(bold);
+            font-size: rem(16px);
+
+            @include mq($from: desktop) {
+                font-size: rem(18px);
+            }
+        }
+        
+        a {
+            padding: $spacing-xsmall $spacing-small;
+            display: flex;
+            align-items: center;
+            gap: $spacing-small;
+            color: currentColor;
+            border-radius: $radius-big;
+
+            .svg {
+                flex-shrink: 0;
+            }
+
+            &:hover,
+            &:focus,
+            &:focus-visible {
+                background-color: color(ateliers-hover);
+            }
+        }
+    }
+}

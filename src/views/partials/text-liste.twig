@@ -1,0 +1,27 @@
+{# Variables
+    paragraphDatas: {}
+    img:  imgObject
+    revert: bool
+    bg: string
+    class: string
+ #}
+
+ {% set classes =  [
+    'text-liste',
+    class,
+    bg ? 'text-liste--' ~ bg : null,
+    revert ? 'text-liste--revert' : null
+ ]|join(' ') %}
+
+
+<div
+    class="{{ classes }}"
+>
+    <div class="text-liste__text">
+        {% include 'modules/paragraph.twig' with paragraphDatas %}
+    </div>
+
+    <div class="text-liste__items">
+        {% include 'modules/ateliers-liste.twig' with items %}
+    </div>
+</div>

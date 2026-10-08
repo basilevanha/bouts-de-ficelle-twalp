@@ -1,0 +1,50 @@
+[template="a-propos"] {
+
+    .container {
+        display: flex;
+        flex-direction: column;
+
+        .banner-members {
+            
+        }
+
+        .paragraph--our-members {
+            margin: $spacing-md 0px;
+
+            @include mq($from: desktop) {
+                max-width: 50%;
+            }
+        }
+
+        .paragraph--archives {
+            margin-top: $spacing-xl;
+            position: relative;
+            padding: $spacing-xl 0;
+
+            .paragraph {
+                .typeset {
+                    margin: unset;
+                    margin-bottom: $spacing-small;
+                }
+            }
+
+            &::before {
+                content: '';
+                z-index: -1;
+                position: absolute;
+                width: 100vw;
+                height: 100%;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: color(bg-secondary);
+            }
+        }
+    }
+
+    .site-footer {
+        &__wrapper::before {
+            background-color: color(bg-secondary);
+        }
+    }
+}

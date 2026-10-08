@@ -1,0 +1,302 @@
+{
+    "key": "group_65970acc97420",
+    "title": "PT - Événement [Sidebar]",
+    "fields": [
+        {
+            "key": "field_65c1394d1a41f",
+            "label": "Image de couverture",
+            "name": "_thumbnail_id",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Ratio de l'image : 16\/9.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": 1600,
+            "max_height": 1600,
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_65df99594844b",
+            "label": "Type de l'événement",
+            "name": "event-type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "atelier": "Atelier",
+                "spectacle": "Spectacle"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 1,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_65df99b64844c",
+            "label": "Nom de l'atelier",
+            "name": "type_name",
+            "aria-label": "",
+            "type": "page_link",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_65df99594844b",
+                        "operator": "==",
+                        "value": "atelier"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "atelier"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "allow_archives": 0,
+            "multiple": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_65df9a0d4844d",
+            "label": "Nom du spectacle",
+            "name": "type_name",
+            "aria-label": "",
+            "type": "page_link",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_65df99594844b",
+                        "operator": "==",
+                        "value": "spectacle"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "spectacle"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "allow_archives": 0,
+            "multiple": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_6668a6c718b33",
+            "label": "Réservation",
+            "name": "event-reservation",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "L'utilisateur doit s'enregistrer à l'avance pour participer à cet événement.",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6668a7d518b34",
+            "label": "Paiement",
+            "name": "event-paid",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6668a6c718b33",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Cet événement est payant.",
+            "default_value": 0,
+            "ui_on_text": "",
+            "ui_off_text": "",
+            "ui": 1
+        },
+        {
+            "key": "field_6668a8c818b36",
+            "label": "Prix de la place",
+            "name": "event-price",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6668a7d518b34",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 0,
+            "max": "",
+            "placeholder": "",
+            "step": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_666ba3926356b",
+            "label": "Formulaire payant",
+            "name": "event-shortcode",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Seulement si il y a un formulaire dédié !\r\nSimplement copier \/ coller le shortcode du formulaire correspondant sans aucune mise en forme.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6668a6c718b33",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6668a7d518b34",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "[ninja_form id=3]",
+            "tabs": "text",
+            "media_upload": 0,
+            "toolbar": "full",
+            "delay": 0
+        },
+        {
+            "key": "field_66a4583c589c8",
+            "label": "Formulaire gratuit",
+            "name": "event-shortcode-free",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Seulement si il y a un formulaire dédié !\r\nSimplement copier \/ coller le shortcode du formulaire correspondant sans aucune mise en forme.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6668a6c718b33",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_6668a7d518b34",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "[ninja_form id=4]",
+            "tabs": "text",
+            "media_upload": 0,
+            "toolbar": "full",
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "event_listing"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "permalink",
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "slug",
+        "author",
+        "format",
+        "page_attributes",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1775245893
+}

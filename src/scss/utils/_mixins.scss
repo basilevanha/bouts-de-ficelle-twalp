@@ -1,0 +1,22 @@
+@mixin font-smoothing($on: true) {
+    @if $on {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    } @else {
+    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+    }
+}
+
+@mixin clearfix {
+    &::after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+}
+
+@mixin font($weight: inherit) {
+    font-family: "openSans";
+    font-weight: map-get($font-weights, $weight);
+}

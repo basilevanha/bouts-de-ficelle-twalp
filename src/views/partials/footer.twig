@@ -1,0 +1,121 @@
+{# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+<footer class="site-footer" js-footer>
+    <div class="site-footer__wrapper">
+
+        {# Navigation #}
+        <div class="bloc" js-bloc>
+            <button class="bloc__title" js-bloc-button>
+                {{ menus.footer.title }}
+                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+            </button>
+            <div class="bloc__content" js-bloc-content>
+                <ul class="site-footer__navigation">
+                    {% set items = menus.footer.get_items %}
+                    {% for item in items %}
+                        <li class="site-footer__navigation__item">
+                            <a
+                                target="{{ item.target }}"
+                                href="{{ item.link }}"
+                                id="footer-navigation-{{ item.id }}"
+                            >{{ item.title }}</a>
+                            {% if item.children %}
+                                <ul>
+                                {% for subitem in item.children %}
+                                    <li>
+                                        {{ icon.sprite('chevron-down', 20, 10, 'Flèche vers le bas', site.theme.link ) }}
+                                        <a
+                                            target="{{ subitem.target }}"
+                                            href="{{ subitem.link }}"
+                                            id="footer-navigation-sub-{{ item.id }}"
+                                        >{{ subitem.title }}</a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {# Dons #}
+        <div class="bloc" js-bloc>
+            <button class="bloc__title" js-bloc-button>
+                {{ global.footer.dons.titre }}
+                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+            </button>
+            <div class="bloc__content" js-bloc-content>
+                <p>{{ global.footer.dons.texte }}</p>
+
+                {% include 'components/button.twig' with {
+                    'label': global.footer.dons.label,
+					'href': global.footer.dons.url,
+                } %}
+            </div>
+        </div>
+
+        {# Contact #}
+        <div class="bloc" js-bloc>
+            <button class="bloc__title" js-bloc-button>
+                {{ global.footer.contact.titre }}
+                {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+            </button>
+            <div class="bloc__content" js-bloc-content>
+                <p>{{ global.footer.contact.texte }}</p>
+
+                {% include 'components/button.twig' with {
+                    'label': global.footer.contact.label,
+					'href': global.footer.contact.url,
+                } %}
+            </div>
+        </div>
+
+        {# Follow #}
+        <div class="bloc">
+            <button class="bloc__title">
+                {{ global.footer.socials.titre }}
+            </button>
+            <div class="bloc__content">
+                <div class="site-footer__follow">
+
+                    {# <form action="" class="site-footer__follow__newsletter">
+                        <input class="site-footer__follow__newsletter__input" type="text" placeholder="{{ global.footer.socials.label }}">
+                        <button type="submit" class="site-footer__follow__newsletter__btn">
+                            {{ icon.sprite('chevron-down', 25, 15, 'Flèche vers le bas', site.theme.link ) }}
+                        </button>
+                    </form> #}
+
+                    {% for social in global.socials %}
+                        <a
+                            href="{{ social.url}}"
+                            label="{{ social.name }}"
+                            title="{{ social.name }}"
+                            target="_blank"
+                            class="site-footer__follow__social"
+                            id="footer-socials-{{ loop.index }}"
+                        >
+                            {{ icon.sprite(social.name, 30, 30, 'Icone de youtube', site.theme.link) }}
+                        </a>
+                    {% endfor %}
+
+                     {% include 'modules/modal.twig' with {
+                        id: 'mailchimpmodal',
+                        title: global.footer.socials.label,
+                        label: global.footer.socials.label,
+                        description: '',
+                        templatepath: 'modules/mailchimp-form.twig'
+                    } %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Footer's footer #}
+    <di class="site-footer__bottom">
+        <p class="site-footer__copyrights">{{ global.copyrights }}</p>
+        {{ icon.sprite('logo', 448, 40, 'logo de l\'asbl bouts de ficelle', site.theme.link ) }}
+        <p class="site-footer__creator">Réalisé par <a class="a" href="https://basile-vanhaverbeke.be" target="_blank">Basile V.</a></p>
+    </di>
+</footer>

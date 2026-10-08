@@ -1,0 +1,105 @@
+{% extends "layouts/base.twig" %}
+
+{% set template = 'cours-stages' %}
+
+{# Variables disponibles :
+		{{ dump(hero) }}
+		{{ dump(offres) }}
+		{{ dump(gouts) }}
+		{{ dump(spectacle) }}
+ #}
+
+{% set heroDatas = {
+	paragraphDatas: {
+		title: hero.titre,
+		text: hero.texte,
+		btns: [
+			{
+				label: hero.btn.label,
+				url: hero.btn.url
+			},
+			{
+				label: hero.btn2.label,
+				url: hero.btn2.url
+			}
+		]
+	},
+	img: hero.img,
+	ratioImg: 120
+ } %}
+
+ {% set offresDatas = {
+	paragraphDatas: {
+		title: offres.titre,
+		text: offres.texte,
+	},
+	img: offres.img,
+	revert: true,
+	ratioImg: 120
+ } %}
+
+ {% set goutsDatas = {
+	paragraphDatas: {
+		title: gouts.titre,
+		text: gouts.texte,
+	},
+	img: gouts.img
+ } %}
+
+  {% set stagesDatas = {
+	paragraphDatas: {
+		title: stages.titre,
+		text: stages.texte,
+	},
+	img: stages.img,
+	revert: true
+ } %}
+
+  {% set spectacleDatas = {
+	paragraphDatas: {
+		title: spectacle.titre,
+		text: spectacle.texte,
+	},
+	img: spectacle.img,
+ } %}
+
+{% block main %}
+
+	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+
+		{# {% if (global.highlight.toggle == true) %}
+			{% include 'modules/highlight.twig' with {event: global.highlight} %}
+		{% endif %} #}
+
+		<div class="section--hero">
+			{% include 'partials/image-text.twig' with heroDatas %}
+		</div>
+
+		<div class="section--offres">
+			{% include 'partials/image-text.twig' with offresDatas %}
+		</div>
+
+		<div class="section--prix">
+			{% include 'partials/offers-list.twig' with { offers: offres.cartes } %}
+		</div>
+
+		{% if gouts.titre %}
+			<div class="section--gouts">
+				{% include 'partials/image-text.twig' with goutsDatas %}
+			</div>
+		{% endif %}
+
+		{% if stages.titre %}
+			<div class="section--stages">
+				{% include 'partials/image-text.twig' with stagesDatas %}
+			</div>
+		{% endif %}
+
+		{% if spectacle.titre %}
+			<div class="section--spectacle">
+				{% include 'partials/image-text.twig' with spectacleDatas %}
+			</div>
+		{% endif %}
+	</div>
+	<!-- /content-wrapper -->
+{% endblock %}

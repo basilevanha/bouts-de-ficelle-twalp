@@ -1,0 +1,34 @@
+{% extends "layouts/base.twig" %}
+
+{% block main %}
+	<article class="single-spectacle container post-type-{{ post.post_type }}" id="post-{{ post.ID }}">
+
+		<div class="single-spectacle__hero">
+			{% include 'atoms/image.twig' with {img: {
+				src: post.cover.url,
+				alt: post.title,
+				ratio: 'banner'
+			}} %}
+
+			<div class="single-spectacle__hero__breadcrumb">
+				<a class="a" id="spectacle-breadcrumb-home" href="{{ site.link }}">Accueil</a>
+				>
+				<a class="a" id="spectacle-breadcrumb-spectacles" href="{{ global.pageSpectacles.link }}">{{ global.pageSpectacles.title }}</a>
+				>
+				{{ post.name }}
+			</div>
+		</div>
+
+		<div class="single-spectacle__content typeset">
+			<h1>{{ post.title }}</h1>
+
+			{{ post.content }}
+			
+			{% if evenements is not empty %}
+				{% include 'partials/all-editions.twig' with {events: evenements} %}
+			{% endif %}
+		</div>
+
+		
+	</article>
+{% endblock %}

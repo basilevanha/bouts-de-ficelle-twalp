@@ -1,0 +1,49 @@
+{# 
+    id: string,
+    title: string,
+    label: string,
+    description: string,
+    content: string,
+    templatepath: string
+ #}
+
+ {# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+<div class="modal" js-modal>
+    {# Open button modal #}
+    {% include 'components/button.twig' with {
+        label: label,
+        datasAttributes: ['js-modal-btn-open']
+    } %}
+
+    {# Modal #}
+    <div
+        id="{{ id }}"
+        class="modal__dialog"
+        role="dialog"
+        aria-labelledby="{{ title }}"
+        aria-describedby="{{ description }}"
+        aria-modal="true"
+        aria-hidden="true"
+        js-modal-dialog
+    >
+        <div class="modal__dialog__header">
+            <p class="modal__dialog__header__title">{{ title }}</p>
+            <button class="modal__dialog__header__close" tabindex="0" aria-label="Fermer" js-modal-btn-close>
+                {{ icon.sprite('close', 20, 20, 'Fermer', site.theme.link ) }}
+            </button>
+        </div>
+
+        <div class="modal__dialog__content typeset">
+            {# <h2 tabindex="0">{{ title }}</h2> #}
+                {% if modalcontent %}
+                    {{ modalcontent }}
+                {% elseif templatepath %}
+                    {% include templatepath %}
+                {% endif %}
+        </div>
+    </div>
+
+    <span class="modal__backdrop" js-modal-backdrop></span>
+</div>

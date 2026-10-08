@@ -1,0 +1,37 @@
+.text-liste {
+    display: flex;
+    
+    @include mq($until: 'l') {
+        flex-direction: column;
+        gap: $spacing-md;
+    }
+
+    @include mq($from: 'l') {
+        align-items: center;    
+    }
+
+    &__text {
+        @include mq($from: 'l') {
+            padding: $spacing-md;
+            flex: 1;
+        }
+    
+    }
+
+    &__items {
+        display: flex;
+        flex: 1;
+        flex-shrink: 0;
+        justify-content: center;
+
+        .ateliers-liste {
+            width: 100%;
+        }
+    }
+
+    &.text-liste--revert {
+        @include mq($from: 'l') {
+            flex-direction: row-reverse;
+        }
+    }
+}

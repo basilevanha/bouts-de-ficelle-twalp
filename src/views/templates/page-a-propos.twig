@@ -1,0 +1,66 @@
+{% extends "layouts/base.twig" %}
+{% set template = 'a-propos' %}
+
+{# Variables disponibles :
+	{{ dump(hero) }}
+	{{ dump(groupe) }}
+	{{ dump(equipe) }}
+	{{ dump(archives) }}
+ #}
+
+{% set heroDatas = {
+	paragraphDatas: {
+		title: hero.titre,
+		text: hero.texte
+	},
+	img: hero.img,
+	isHero: true,
+	ratioImg: 90
+ } %}
+
+ {% set equipeDatas = {
+	title: equipe.titre,
+	text: equipe.texte,
+	btns: [
+		{
+			label: equipe.btn.label,
+			url: equipe.btn.url,
+		}
+	]
+ } %}
+
+  {% set archivesDatas = {
+	title: fichiers.titre,
+	text: fichiers.texte,
+	btn: fichiers.btn
+ } %}
+
+
+{% block main %}
+	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+		
+		{% include 'partials/image-text.twig' with heroDatas %}
+		
+		{% include 'atoms/image.twig' with {img: {
+			src: groupe.url,
+			alt: groupe.alt,
+			ratio: 'banner'
+		}} %}
+
+		<div class="paragraph--our-members">
+			{% include 'modules/paragraph.twig' with equipeDatas %}
+		</div>
+
+    	{% include 'partials/members.twig' with {members: membres} %}
+		
+		<div class="paragraph--archives">
+			{% include 'modules/paragraph.twig' with archivesDatas %}
+
+			{% include 'components/button.twig' with {
+				label: archivesDatas.btn.label,
+				href: archivesDatas.btn.url,
+			} %}
+		</div>
+
+	</div>
+{% endblock %}

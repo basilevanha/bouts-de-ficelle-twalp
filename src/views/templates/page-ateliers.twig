@@ -1,0 +1,43 @@
+{% extends "layouts/base.twig" %}
+
+{% set template = 'ateliers' %}
+
+{# Variables disponibles :
+		{{ dump(hero) }}
+		{{ dump(ateliers) }}
+ #}
+
+  {% set heroDatas = {
+	paragraphDatas: {
+		title: hero.titre,
+		text: hero.texte,
+		btns: [
+			{
+				label: hero.btn.label,
+				url: hero.btn.url
+			}
+		]
+	},
+	revert: true,
+	img: hero.img,
+ } %}
+
+
+{% block main %}
+
+	<div class="container post-type-{{post.post_type}}" id="post-{{post.ID}}">
+		<div class="section--hero">
+			{% include 'partials/image-text.twig' with heroDatas %}
+		</div>
+
+		{% if (global.highlight.toggle == true) and (global.highlight.type == 'atelier') %}
+			{% include 'modules/highlight.twig' with {title: 'Atelier à la une', event: global.highlight} %}
+		{% endif %}
+		
+		<div class="section--ateliers">
+			<h2 class="h2">{{ liste.titre }}</h2>
+			{% include 'partials/cards-list.twig' with {cards: ateliers} %}
+		</div>
+	</div>
+	<!-- /content-wrapper -->
+{% endblock %}

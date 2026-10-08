@@ -1,0 +1,205 @@
+.button,
+input[type="submit"].button.ninja-forms-field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xsmall $spacing-small;
+  @include font('bold');
+  font-size: rem(20px);
+  line-height: 1.4;
+  border-radius: 12px;
+  transition:
+    color .3s ease-in-out,
+    background .3s ease-in-out,
+    border .3s ease-in-out;
+  outline: none;
+  width: 100%;
+  border: solid 3px;
+  
+  @include mq($from: desktop) {
+    max-width: max-content;
+  }
+  
+  &:focus,
+  &:focus-visible {
+    outline: 3px solid color(focus);
+  }
+
+  &:hover,
+  &:active {
+    outline: none;
+  }
+
+  &.button--default {
+    background-color: color(button-bg);
+    color: color(button-txt);
+    border-color: color(button-bg);
+
+    &:hover {
+      cursor: pointer;
+      background-color: color(button-hover-bg);
+      border-color: color(button-hover-bg);
+    }
+    
+    &:active {
+      background-color: color(button-pressed);
+      border-color: color(button-pressed);
+    }
+
+    &.button--dark {
+      background-color: color(button-dark-bg);
+      color: color(button-dark-txt);
+      border-color: color(button-dark-bg);
+      
+      &:hover {
+        color: color(button-dark-hover-txt);
+        background-color: color(button-dark-hover-bg);
+        border-color: color(button-dark-hover-txt);
+      }
+      
+      &:active {
+        background-color: color(button-dark-pressed);
+        border-color: color(button-dark-bg);
+      }
+    }
+  
+    &.button--secondary {
+      background-color: color(button-secondary-bg);
+      color: color(button-secondary-txt);
+      border-color: color(button-secondary-bg);
+      
+      &:hover {
+        color: color(button-secondary-hover-txt);
+        background-color: color(button-secondary-hover-bg);
+        border-color: color(button-secondary-hover-txt);
+      }
+      
+      &:active {
+        background-color: color(button-secondary-pressed);
+        border-color: color(button-secondary-bg);
+      }
+    }
+  
+    &.button--tertiary {
+      background-color: color(button-tertiary-bg);
+      color: color(button-tertiary-txt);
+      border-color: color(button-tertiary-bg);
+      
+      &:hover {
+        color: color(button-tertiary-hover-txt);
+        background-color: color(button-tertiary-hover-bg);
+        border-color: color(button-tertiary-hover-txt);
+      }
+      
+      &:active {
+        background-color: color(button-tertiary-pressed);
+        border-color: color(button-tertiary-bg);
+      }
+    }
+  }
+
+
+  &.button--neg {
+    background-color: color(button-neg-bg);
+    color: color(button-neg-txt);
+    border-color: color(button-neg-bg);
+    
+    &:hover {
+      color: color(button-neg-hover-txt);
+      background-color: color(button-neg-hover-bg);
+      border-color: color(button-neg-hover-bg);
+    }
+    
+    &:active {
+      background-color: color(button-neg-pressed);
+      border-color: color(button-neg-pressed);
+    }
+
+    &.button--dark {
+      background-color: color(button-neg-dark-bg);
+      color: color(button-neg-dark-txt);
+      border-color: color(button-neg-dark-bg);
+      
+      &:hover {
+        color: color(button-neg-dark-txt);
+        background-color: color(button-neg-dark-hover-bg);
+        border-color: color(button-neg-dark-hover-bg);
+      }
+      
+      &:active {
+        background-color: color(button-neg-dark-pressed);
+        border-color: color(button-neg-dark-pressed);
+      }
+    }
+
+    &.button--secondary {
+      background-color: color(button-neg-secondary-bg);
+      color: color(button-neg-secondary-txt);
+      border-color: color(button-neg-secondary-bg);
+      
+      &:hover {
+        color: color(button-neg-secondary-hover-txt);
+        background-color: color(button-neg-secondary-hover-bg);
+        border-color: color(button-neg-secondary-hover-bg);
+      }
+      
+      &:active {
+        background-color: color(button-neg-secondary-pressed);
+        border-color: color(button-neg-secondary-pressed);
+      }
+    }
+  
+    &.button--tertiary {
+      background-color: color(button-neg-tertiary-bg);
+      color: color(button-neg-tertiary-txt);
+      border-color: color(button-neg-tertiary-bg);
+      
+      &:hover {
+        color: color(button-neg-tertiary-hover-txt);
+        background-color: color(button-neg-tertiary-hover-bg);
+        border-color: color(button-neg-tertiary-hover-bg);
+      }
+      
+      &:active {
+        background-color: color(button-neg-tertiary-pressed);
+        border-color: color(button-neg-tertiary-pressed);
+      }
+    }
+  }
+
+  &.button--ghost {
+    &.button--primary {
+      background-color: color(light);
+      color: color(primary);
+      border-color: color(primary);
+      
+      &:hover {
+        color: color(primary);
+        background-color: color(button-neg-hover-bg);
+        border-color: color(primary);
+      }
+      
+      &:active {
+        background-color: color(button-neg-pressed);
+        border-color: color(primary);
+      }
+    }
+
+    &.button--dark {
+      background-color: color(light);
+      color: color(dark);
+      border-color: color(dark);
+      
+      &:hover {
+        color: color(dark);
+        background-color: color(button-neg-dark-hover-bg);
+        border-color: color(dark);
+      }
+      
+      &:active {
+        background-color: color(button-neg-dark-pressed);
+        border-color: color(dark);
+      }
+    }
+  }
+}

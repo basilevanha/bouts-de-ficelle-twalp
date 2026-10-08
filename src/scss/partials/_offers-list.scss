@@ -1,0 +1,14 @@
+.offers-list {
+    display: grid;
+    gap: $spacing-md;
+    padding: $spacing-small 0 $spacing-lg;
+
+    @include mq($from: xs) {
+        grid-template-columns: repeat(auto-fill,minmax(400px, 1fr));
+    }
+    
+    &__card-wrapper {
+        display: flex;
+        height: 100%;
+    }
+}

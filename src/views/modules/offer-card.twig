@@ -1,0 +1,41 @@
+{% import 'atoms/icon.twig' as icon %}
+
+<div class="offer-card color--{{ color }}">
+    {% include 'atoms/image.twig' with {img: {
+        src: img.url,
+        alt: img.alt,
+        ratio: 'widescreen',
+        class: 'offer-card__img'
+    }} %}
+    
+    <div class="offer-card__infos">
+        <p class="offer-card__infos__title h3">{{ title }}</p>
+        <p class="offer-card__infos__price h1">
+            <span class="euro">€ </span>
+            {{ price }}
+            {% if disclaimer %}
+                <span class="disclaimer">*</span>
+            {% endif %}
+            <span class="unit"> {{ unit }}</span> </p>
+        <p class="offer-card__infos__schedule bubble">
+		    {{ icon.sprite('time', 35, 35, 'Icone de youtube', site.theme.link) }}
+            {{ schedule }}
+        </p>
+        <p class="offer-card__infos__number bubble">
+		    {{ icon.sprite('people', 40, 40, 'Icone de youtube', site.theme.link) }}
+            {{ number }}
+        </p>
+        <p class="offer-card__infos__calendar bubble">
+		    {{ icon.sprite('calendar', 40, 40, 'Icone de youtube', site.theme.link) }}
+            {{ calendar }}
+        </p>
+        {% if disclaimer %}
+            <p class="offer-card__infos__disclaimer">
+                * {{ disclaimer }}
+            </p>
+        {% endif %}
+        <div class="offer-card__infos__btn">
+	    	{% include 'components/button.twig' with {href: btn.url, label: btn.label, color: 'dark'} %}
+        </div>
+    </div>
+</div>

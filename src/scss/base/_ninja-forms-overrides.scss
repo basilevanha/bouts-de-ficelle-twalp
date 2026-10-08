@@ -1,0 +1,41 @@
+$form-input-height: 44px;
+
+.nf-form-layout,
+.bdf-form-wrapper {
+    .nf-error.field-wrap .nf-field-element:after {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        height: $form-input-height;
+        line-height: $form-input-height;
+    }
+
+    .nf-field-container:not(.submit-container, .textarea-container) .nf-field-element {
+        border-radius: 40px;
+    }
+
+    input[type="text"].ninja-forms-field,
+    input[type="email"].ninja-forms-field,
+    input[type="number"].ninja-forms-field,
+    input[type="tel"].ninja-forms-field,
+    textarea.ninja-forms-field,
+    select.ninja-forms-field {
+        width: 100%;
+        height: $form-input-height;
+        border-radius: 0;
+        border: 0;
+        background-color: color(input);
+        padding: 0 $burger-width 0 $container-padding;
+        appearance: none;
+    }
+
+    .textarea-wrap {
+        .nf-field-element {
+            border-radius: $radius-small;
+            overflow: hidden;
+        }
+        textarea.ninja-forms-field {
+            padding: $spacing-small;
+        }
+    }
+}

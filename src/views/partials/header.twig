@@ -1,0 +1,85 @@
+{# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+<header class="site-header" role="navigation" js-header>
+	<div class="site-header__head">
+		<div class="site-header__logo">
+			<a href="{{ site.url}}" js-focus-link id="header-logo">
+				<img src="{{ global.logo.url }}" alt="{{ global.logo.alt}}">
+			</a>
+		</div>
+
+		<button id="header-burger" class="site-header__burger" js-burger-button>
+			<span class="site-header__burger__line"></span>
+			<span class="site-header__burger__line"></span>
+			<span class="site-header__burger__line"></span>
+		</button>
+	</div>
+
+	<div class="site-header__body" js-menu>
+		{% if menus %}
+			<ul class="site-header__body__navigation">
+				{% set items = menus.header.get_items %}
+				{% for item in items %}
+					<li class="site-header__body__navigation__item">
+						<a
+							target="{{ item.target }}"
+							href="{{ item.link }}"
+							class="{{ post.id == item.object_id ? ' active ' : '' }}"
+							js-menu-link
+							id="header-navigation-item-{{ item.id }}"
+							{% if post.id == item.object_id %}disabled{% endif %}
+						>{{ item.title }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
+		<div class="site-header__body__footer">
+
+			{% if global.footer.contact.texte %}
+				<p class="site-header__body__footer__txt">
+					{{ global.footer.contact.texte}}
+				</p>
+			{% endif %}
+			
+			{% if global.footer.contact.url %}
+				{% include 'components/button.twig' with {
+					'label': global.footer.contact.label,
+					'href': global.footer.contact.url,
+					datasAttributes: ['js-menu-link'],
+					'isHeader': true,
+					'class': 'site-header__body__footer__contact'
+				} %}
+			{% endif %}
+
+			<div class="socials">
+				{% for social in global.socials %}
+					<a
+						href="{{ social.url}}"
+						label="{{ social.name }}"
+						target="_blank"
+						id="header-socials-item-{{ loop.index }}"
+					>
+						{{ icon.sprite(social.name, 30, 30, 'Icone de youtube', site.theme.link) }}
+					</a>
+				{% endfor %}
+			</div>
+
+			{{ icon.sprite('logo', 448, 40, 'logo de l\'asbl bouts de ficelle', site.theme.link ) }}
+		</div>
+	</div>
+
+	<form
+		role="search"
+		method="get"
+		id="searchform"
+		action="{{site.link}}"
+		class="site-header__search searchform"
+		id="header-search-form"
+	>
+		<label for="s" class="u-visually-hidden">Chercher dans le site:</label>
+		<input type="text" class"site-header__search__input" name="s" id="s" {{ function('get_search_query') }} />
+		<button type="submit" id="searchsubmit" js-menu-link js-focus-link>{{ icon.sprite('search', 20, 20, 'icone de recherche', site.theme.link) }}</button>
+	</form>
+</header>

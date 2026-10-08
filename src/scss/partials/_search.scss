@@ -1,0 +1,16 @@
+.search-page {
+    padding-top: $spacing-small;
+    padding-bottom: $spacing-small;
+
+    .h2 {
+        padding-bottom: $spacing-md;
+
+        .query {
+            margin-left: $spacing-xsmall;
+            border: 3px solid color(focus);
+            border-radius: $radius-small;
+            padding-left: $spacing-xsmall;
+            padding-right: $spacing-xsmall;
+        }
+    }
+}

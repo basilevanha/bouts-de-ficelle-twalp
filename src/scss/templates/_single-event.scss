@@ -1,0 +1,96 @@
+.single-event {
+    
+    &__container {
+        max-width: 1250px;
+        // border: 3px solid color(dark);
+        margin: $spacing-small auto $spacing-lg;
+    }
+
+    &__hero {
+        width: 100%;
+        margin-top: $spacing-small;
+
+        @include mq($until: 'm') {
+            width: 100vw;
+            margin-left: -$spacing-small;
+            margin-right: -$spacing-small;
+        }
+
+    }
+
+    &__content {
+        padding: $spacing-small;
+        margin-top: -$spacing-lg;
+        position: relative;
+
+        @include mq($until: 'm') {
+            padding: 0;
+        }
+        
+        &__infos {
+            padding: $spacing-xsmall $spacing-small $spacing-small;
+            background-color: color(bg-dark);
+            border-radius: $radius-small;
+
+            @include mq($from:'desktop') {
+                padding: $spacing-small;
+            }
+
+            h1 {
+                margin-bottom: $spacing-small;
+
+                @include mq($until: 'm') {
+                    font-size: 30px;
+                }
+            }
+
+            &__start,
+            &__end,
+            &__location {
+                display: flex;
+                gap: $spacing-xsmall;
+                flex-wrap: wrap;
+                
+                @include mq($from: 'm') {
+                    margin: 0 !important;
+                }
+
+                .svg {
+                    margin-top: 8px;
+                }
+
+                a {
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+
+            .button {
+                margin-top: $spacing-small;
+            }
+        }
+    }
+
+    ul.single-event__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-small;
+        padding: $spacing-small $spacing-small $spacing-md 0;
+        margin: 0;
+        
+        li {
+            &::before {
+                display: none;
+            }
+
+            a {
+                padding: $spacing-xsmall $spacing-small;
+                border-radius: $spacing-md;
+                @include font('bold');
+                font-size: rem(13px);
+                text-transform:capitalize;
+            }
+        }
+
+    }
+}

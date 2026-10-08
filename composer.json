@@ -1,0 +1,19 @@
+{
+  "name": "basilevanha/wp-boilerplate",
+  "description": "Modern WordPress boilerplate — Timber, Tailwind CSS, Alpine.js, Vite, Docker",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "timber/timber": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/theme/src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

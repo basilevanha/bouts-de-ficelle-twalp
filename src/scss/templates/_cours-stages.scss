@@ -1,0 +1,72 @@
+[template="cours-stages"] {
+    .site-container {
+        .container {
+
+            .section--hero {
+                margin: 0 0 $spacing-xl 0;
+            }
+
+            .section--offres {
+                padding-top: $spacing-md;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    z-index: -1;
+                    position: absolute;
+                    width: 100vw;
+                    height: 140%;
+                    top: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: color(bg-primary);
+                }
+            }
+
+            .section--prix {
+            }
+
+            .section--gouts {
+                padding: $spacing-xl 0;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    z-index: -1;
+                    position: absolute;
+                    width: 100vw;
+                    height: 100%;
+                    top: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: color(bg-secondary);
+                }
+            }
+
+            .section--spectacle {
+                padding: $spacing-xl 0;
+                position: relative;
+
+                &::before {
+                    content: '';
+                    z-index: -1;
+                    position: absolute;
+                    width: 100vw;
+                    height: 100%;
+                    top: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: color(bg-dark);
+                }
+            }
+        }
+    }
+
+    .site-footer {
+        &__wrapper {
+            &::before {
+                background-color: color(bg-dark);
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{# Variables
+    paragraphDatas: {}
+    img:  imgObject
+    revert: bool
+    bg: string
+    class: string
+    ratioImg: number
+    btnColor: 'primary' | 'secondary' | 'tertiary'
+ #}
+
+
+ {% set paragraphDatas = paragraphDatas|merge({btnColor}) %}
+
+ {% set classes =  [
+    'image-text',
+    class,
+    bg ? 'image-text--' ~ bg : null,
+    revert ? 'image-text--revert' : null
+ ]|join(' ') %}
+
+
+<div
+    class="{{ classes }} ratio-img--{{ ratioImg ? ratioImg : 100 }}"
+>
+    <div class="image-text__img">
+        {% include 'atoms/image.twig' with {img: {
+            src: img.url,
+            alt: img.alt
+        }} %}
+    </div>
+
+    <div class="image-text__text">
+        {% include 'modules/paragraph.twig' with paragraphDatas %}
+    </div>
+</div>

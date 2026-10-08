@@ -1,0 +1,31 @@
+{
+  "name": "wp-boilerplate",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node bin/dev.js",
+    "build": "node bin/sync.js --production && vite build",
+    "sync": "node bin/sync.js",
+    "sprite": "node bin/build-sprite.js",
+    "setup": "bash bin/setup.sh",
+    "stop": "docker compose -f docker/docker-compose.yml --env-file .env down",
+    "dump": "DUMP_FILE=database/dump-$(date +%Y%m%d-%H%M%S).sql && docker compose -f docker/docker-compose.yml --env-file .env exec -T db sh -c 'mysqldump --no-tablespaces -u\"$MYSQL_USER\" -p\"$MYSQL_PASSWORD\" \"$MYSQL_DATABASE\" 2>/dev/null' > \"$DUMP_FILE\" && echo \"✔ Database exported to $DUMP_FILE\"",
+    "import": "bash bin/import.sh",
+    "reset": "bash bin/reset.sh"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "chokidar": "^4.0.0",
+    "dotenv": "^16.4.0",
+    "gettext-parser": "^9.0.2",
+    "sass-embedded": "^1.105.1",
+    "sass-mq": "4.0.2",
+    "tailwindcss": "^4.2.2",
+    "vite": "^6.0.0",
+    "vite-plugin-live-reload": "^3.0.0"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.8"
+  }
+}

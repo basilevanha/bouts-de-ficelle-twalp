@@ -1,0 +1,46 @@
+/* ========================================
+   MIGRATION — PHASE 1
+   The site is still styled by the legacy SCSS (src/scss/app.scss), which
+   ships its own reset. Tailwind's preflight is therefore NOT loaded:
+   only the theme variables and the utilities.
+   Once the SCSS is gone, replace the imports below with
+   `@import "tailwindcss";`.
+   Note: legacy SCSS is unlayered, so it wins over Tailwind utilities.
+   ======================================== */
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "../views/**/*.twig";
+
+/* ========================================
+   BOUTS DE FICELLE TOKENS
+   Same values as src/scss/utils/_variables.scss
+   ex: --color-primary => text-primary, bg-primary
+   ======================================== */
+
+@theme {
+    --font-sans: "OpenSans", ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary: #e26134;
+    --color-secondary: #69a99b;
+    --color-tertiary: #be3e82;
+    --color-dark: #293665;
+    --color-light: #f5f5f5;
+    --color-black: #2f3b41;
+    --color-white: #ffffff;
+
+    --radius-small: 10px;
+    --radius-big: 30px;
+}
+
+/* SVG icons rendered by the icon() Twig helper (see inc/icon.php).
+   The legacy templates still use the atoms/icon.twig macro. */
+@layer base {
+    .icon {
+        width: 1em;
+        height: 1em;
+        fill: currentColor;
+        vertical-align: middle;
+    }
+}

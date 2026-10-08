@@ -1,0 +1,150 @@
+{
+    "key": "group_65945dff18e60",
+    "title": "PT - Atelier [Vignette]",
+    "fields": [
+        {
+            "key": "field_65945dff56fbd",
+            "label": "Icône",
+            "name": "icon",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "sapin": "Sapin",
+                "team": "Equipe",
+                "child": "Enfant",
+                "video": "Vidéo",
+                "sciences": "Sciences",
+                "handshake": "Poignée de main",
+                "cornemuse": "Cornemuse",
+                "micro": "Micro",
+                "guitare": "Guitare",
+                "music": "Note de musique",
+                "tape": "Enregistreur",
+                "moon": "Lune",
+                "sun": "Soleil",
+                "tree": "Arbre",
+                "tool": "Outil",
+                "fleur": "Fleur",
+                "ecureuil": "Ecureuil",
+                "idea": "Idée"
+            },
+            "default_value": false,
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_65b96c78bd8d3",
+            "label": "Vignette de la carte",
+            "name": "_thumbnail_id",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Ratio de l'image : 16\/9.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": 1600,
+            "max_height": 1600,
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_65bbba070ed39",
+            "label": "description",
+            "name": "description",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Description de l'atelier qui apparaitra dans sa carte affichée sur la page ateliers. Max 200 caractères.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 200,
+            "rows": "",
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_65de504e67a75",
+            "label": "Label du bouton",
+            "name": "label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "En savoir plus",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "atelier"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "slug",
+        "author",
+        "format",
+        "page_attributes",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1721950853
+}

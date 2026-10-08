@@ -1,0 +1,7 @@
+{% macro sprite(id, width, height, label, path)  %}
+	<span class="svg svg-{{ id }}">
+		<svg width="{{ width }}" height="{{ height }}" {% if label %} aria-label="{{ label }}" {% endif %}>
+			<use href="{{ path }}/assets/icons/sprite.svg#icon-{{ id }}"></use>
+		</svg>
+	</span>
+{% endmacro %}

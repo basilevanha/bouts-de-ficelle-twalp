@@ -1,0 +1,20 @@
+{# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+{# 
+    items: []
+ #}
+
+<div class="ateliers-liste">
+    <ul class="ateliers-liste__items">
+        {% for item in items %}
+            <li class="ateliers-liste__item">
+                <a href="{{ item.post.link }}">
+                    {{ icon.sprite(item.icon, 40, 40, 'icone de' ~ item.icon, site.theme.link ) }}
+                    <span class="ateliers-liste__item__text">{{ item.post.title }}</span>
+                    {# {{ icon.sprite('arrow', 50, 20, 'icone de flèche vers la droite', site.theme.link ) }} #}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

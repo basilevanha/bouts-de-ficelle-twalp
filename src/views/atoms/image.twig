@@ -1,0 +1,37 @@
+{# 
+    img: {
+        src: string,
+        alt: string,
+        resize: {
+            small: int
+            medium: int
+            large: int
+            xlarge: int
+        },
+        class= string,
+        ratio: 'banner' | 'widescreen' | 'tv' | 'square'
+    }
+ #}
+
+{% set imageRatio = img.ratio ? img.ratio : 'tv' %}
+
+{% set resizeSmall = img.resize.small ? img.resize.small : 450 %}
+{% set resizeMedium = img.resize.medium ? img.resize.medium : 1024 %}
+{% set resizeLarge = img.resize.large ? img.resize.large : 1300 %}
+{% set resizeXlarge = img.resize.xlarge ? img.resize.xlarge : 1440 %}
+
+<div class="img-lazy js-loading ratio--{{ imageRatio }} {{img.class}}" js-img-lazy>
+    <picture class="img-lazy__picture" js-img-lazy-picture>
+        <source media="(min-width: 1300px)" srcset="{{ img.src|resize(resizeXlarge) }}" />
+        <source media="(min-width: 1024px)" srcset="{{ img.src|resize(resizeLarge) }}" />
+        <source media="(min-width: 768px)" srcset="{{ img.src|resize(resizeMedium) }}" />
+        <img src="{{ img.src|resize(resizeSmall) }}" alt="{{ img.alt }}" loading="lazy" js-img-lazy-tag />
+    </picture>
+    <span class="img-lazy__placeholder" js-img-lazy-placeholder>
+        <img
+            class"img-lazy__placeholder"
+            src="{{ img.src|resize(10) }}"
+            alt="{{img.alt}}"
+        />
+    </span>
+</div>

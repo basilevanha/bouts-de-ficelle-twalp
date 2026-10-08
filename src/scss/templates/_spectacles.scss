@@ -1,0 +1,21 @@
+[template="spectacles"] {
+    .site-container {
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-lg;
+            
+            .section--hero {
+
+            }
+
+            .section--spectacles {
+                margin: $spacing-lg 0;
+                
+                .h2 {
+                    margin-bottom: $spacing-md;
+                }
+            }
+        }
+    }
+}

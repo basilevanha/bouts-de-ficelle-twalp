@@ -1,0 +1,87 @@
+{# Macros #}
+{% import 'atoms/icon.twig' as icon %}
+
+{% extends "layouts/base.twig" %}
+
+{% block main %}
+	<article class="container post-type-{{ post.post_type }} single-event" id="post-{{ post.ID }}">
+		<div class="single-event__container">
+			<div class="single-atelier__hero__breadcrumb">
+				<a class="a" id="event-breadcrumb-events" href="{{ site.link }}/calendrier">Calendrier</a>
+				>
+				{{ post.name }}
+			</div>
+			<div class="single-event__hero">
+				{% include 'atoms/image.twig' with {img: {
+					src: post.thumbnail,
+					alt: post.title,
+					ratio: 'widescreen'
+				}} %}
+			</div>
+
+			<div class="single-event__content typeset">
+
+				<div class="single-event__content__infos">
+					<h1>{{ post.title }}</h1>
+					<p class="single-event__content__infos__start">
+						{{ icon.sprite('time', 25, 25, 'Début', site.theme.link ) }}
+						<strong>Début:</strong> <span class="value">{{ infos.start|date("d F \\à\\ H:i") }}</span>
+					</p>
+					<p class="single-event__content__infos__end">
+						{{ icon.sprite('time', 25, 25, 'Fin', site.theme.link ) }}
+						<strong>Fin:</strong> <span class="value">{{ infos.end|date("d F \\à\\ H:i") }}</span>
+					</p>
+					<p class="single-event__content__infos__location">
+                		{{ icon.sprite('localisation', 25, 25, 'icone de localisation', site.theme.link ) }}
+						<strong>Lieu:</strong>
+						<span class="value">
+						<a
+							class="single-event__content__infos a"
+							href="https://www.google.com/maps/search/?api=1&query={{ infos.location|url_encode }}"
+							target="_blank"
+							id="event-location-on-google-maps"
+						> {{ infos.location }}</a>
+						</span>
+					</p>
+
+					{% if reservation %}
+						{% include 'modules/modal.twig' with {
+							label: "Réserver",
+							id: "Réservation",
+							title: "Réserver sa place",
+							description: "Formulaire de réservation",
+							modalcontent: isBillable ? registrationForm|raw : registrationFormFree|raw
+						} %}
+					{% endif %}
+				</div>
+
+				{{ content }}
+
+				{% if typeEvent %}
+					<h5>Tags : </h5>
+					<ul class="single-event__tags">
+						<li>
+							{% include 'components/button.twig' with {
+								label: typeEvent,
+								href: typeEvent == "atelier" ? ateliersURL : spectaclesURL,
+								style: 'neg',
+								color: 'dark'
+							} %}
+						</li>
+						<li>
+							{% include 'components/button.twig' with {
+								label: typeName,
+								href: typeURL,
+								style: 'neg',
+								color: 'dark'
+							} %}
+						</li>
+					</ul>
+				{% endif %}
+
+			</div>
+
+			
+		</div>
+	</article>
+{% endblock %}
